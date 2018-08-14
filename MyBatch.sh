@@ -1,16 +1,9 @@
 #!/bin/bash
 
-#for i in {2..32..2} 
-#do
-  i=1
-  for j in {0..10}
-  do
-    T=$(bc <<<"$i*$j")
-#  echo "$T"
+counter = $1
 ./x86_64/special -nobanner MyHipp.hoc - << here
-  abc($j, $i)
+  abc($counter, 10)
 here
-  done
-  echo Ok  
-# done
+  
+echo Ok  
 echo All done
