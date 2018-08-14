@@ -1,0 +1,213 @@
+//// Write neueron locations
+proc printLoc() { localobj fileLoc
+
+for i= 0, Locs.count()-1 {
+strdef fileLocName
+if (i < 10) {
+	sprint(fileLocName, "%s%sLoc0%g.txt", outPath, IDstring, i)
+	} else {
+	sprint(fileLocName, "%s%sLoc%g.txt", outPath, IDstring, i)
+	}
+	
+fileLoc = new File(fileLocName)
+fileLoc.wopen()
+	for j= 0, Locs.o(i).ncol -1  {
+		fileLoc.printf("%f %f %f \n", Locs.o(i).x[0][j], Locs.o(i).x[1][j], Locs.o(i).x[2][j])
+	}
+	fileLoc.close()
+}
+}
+
+//printLoc()
+//original proc is in Connect.hoc
+
+////// Write outputs
+
+objref outFile, SpikesCA3, SpikesDG, SpikesEC, outCA3int, outDGint, ExpParameters
+strdef filename
+
+if (Experiment ==4) {
+	writeCurrents = 1
+	} else {
+	writeCurrents = 0
+	}
+writeWeights = 0
+writeVolts = 1
+/////////////////   Write Volts
+objref vfile
+strdef vfileName
+
+if (writeVolts > 0 ) {
+sprint(vfileName, "%s%s%s", outPath, IDstring,  "Volts.txt")
+vfile = new File(vfileName)
+vfile.wopen()
+
+vfile.printf("-1 ") // First index is for time.
+for ii = 0, Volts.count() -1 {  //Beca
+	vfile.printf("%g ", CellsToRec.x(ii))
+}// for ii
+	
+	for j = 0, Volts.o(0).size() -1 {
+		vfile.printf("\n")
+		vfile.printf("%g ", tvvec.x(j))
+		
+		for k = 0, Volts.count() -1 {
+			vfile.printf("%g ", Volts.o(k).x(j))
+		}
+	}
+		vfile.close()
+
+}
+
+/////////////////   Write Spike Times
+objref Sfile
+strdef sfileName
+
+//for ii = 0, SpikeTimes.count() -1 {
+for ii = 0, 1 {
+		sprint(sfileName, "%s%s%s%g%s", outPath, IDstring,  "SpikeTime", ii, ".txt")
+		Sfile= new File(sfileName)
+		printf(sfileName)
+		Sfile.wopen()
+			for j = 0, SpikeTimes.o(ii).size() -1 {
+				Sfile.printf("%g, %g\n", SpikeIDs.o(ii).x(j), SpikeTimes.o(ii).x(j))
+			}
+		Sfile.close()
+}
+
+
+/// /////////////   Write synaptic weights
+
+objref weightFile
+strdef weightFilename
+sprint(weightFilename, "%s%s%s", outPath, IDstring, "Weights.txt")
+
+if (writeWeights > 0) {
+weightFile = new File(weightFilename)
+
+weightFile.wopen()
+weightFile.printf("-1 ") // First index is for time.
+for k  = 0, Weights.count() -1 {
+	weightFile.printf("%g ", Connections.x(k, 0))
+} //for k
+weightFile.printf("\n")
+
+for h = 0, Weights.o(0).size() - 1 {
+	weightFile.printf("\n")
+	weightFile.printf("%g ", twvec.x(h))
+	for k  = 0, Weights.count() -1 {
+		weightFile.printf("%g ", Weights.o(k).x(h))
+	}
+} 
+weightFile.close()
+}
+
+/// /////////////   Write Currents
+
+objref CurrentsFile
+strdef CurrentsFilename
+sprint(CurrentsFilename, "%s%s%s", outPath, IDstring,  "Currents.txt")
+
+if (writeCurrents > 0) {
+CurrentsFile = new File(CurrentsFilename)
+
+CurrentsFile.wopen()
+CurrentsFile.printf("-1 ") // First index is for time.
+for k  = 0, Currents.count() -1 {
+	CurrentsFile.printf("%g ", Connections.x(k, 0))
+} //for k
+CurrentsFile.printf("\n")
+
+for h = 0, Currents.o(0).size() - 1 {
+	CurrentsFile.printf("\n")
+	CurrentsFile.printf("%g ", twvec1.x(h))
+	for k  = 0, Currents.count() -1 {
+		CurrentsFile.printf("%g ", Currents.o(k).x(h))
+	}
+} 
+CurrentsFile.close()
+}
+
+//////////// Writing connection information /////////////
+// Connections.printf()
+/*
+objref conFile
+strdef conFilename
+sprint (conFilename, "%s%s%s", outPath, IDstring,"Connections.txt")
+conFile = new File(conFilename)
+conFile.wopen()
+// Connections.fprint(0, conFile)
+for k = 0, Connections.nrow -1 {
+conFile.printf("%g %g %g %g %g %g\n", Connections.x(k, 0), Connections.x(k, 1),Connections.x(k, 2),Connections.x(k, 3),Connections.x(k, 4),Connections.x(k, 5))
+}
+conFile.close()
+*/
+
+
+proc DrawSpikes() {localobj grra
+	pop = $1
+	grra = $o2
+	strdef lab
+	sprint(lab, "%g Spikes", pop)
+	grra.size(0, tstop, 0, Totals.x(pop))
+	grra.label(lab)
+    SpikeIDs.o(pop).mark(grra, SpikeTimes.o(pop), "-", 2, 2, 1)  //style, size, color, brush
+	
+}
+
+/////////////////	Write experiment parameters
+// sprint(filename,"%s%s","ExpParameters.txt")
+// ExpParameters = new File(filename)
+// ExpParameters.wopen()
+
+// if (Experiment == 0) {
+// StimCount = 16
+// StimSpace = tstop / StimCount
+// StimDurRatio = 250 / StimSpace
+// StimSpaceRatio = StimSpace / tstop
+
+// CondTrials = 5
+// ExtTrials = 9
+// EarlyTestTrials = 1
+// TestTrials = 1
+// Trials = CondTrials + EarlyTestTrials + ExtTrials +TestTrials
+// TrialSpace = tstop / Trials
+// TrialDurRatio = 250 /TrialSpace
+// UStoCSratio = 0.2
+// EmoUStoCSratio = 0.5
+// USstimWeight = 20
+// USstimInterval = 30
+// }
+// ExpParameters.close()
+
+
+/*
+*/
+// strdef hhh, lll
+// proc PrintCA3remapping () { localobj fobjCA3 
+
+// TrialNumber = $1
+// sprint(hhh, ".\\Outputs\\%gCA3remap.txt", TrialNumber)
+// fobjCA3 = new File(hhh)
+// fobjCA3.wopen()
+
+// for CA3ID = 0, excTotal - 1 {
+	// for h = 0, Trials -1  {
+	// fobjCA3.printf("%g, ", CA3remapping[CA3ID].x[h])
+	// }
+	// fobjCA3.printf("\n")
+	// }
+// // CA3remapping[1].printf(0, fobjCA3)
+// fobjCA3.close()
+
+// }
+
+// outFile.printf("%g, %g, %g, %g, %g, %g", ExpNo, Var1, Var2, Var3, Var4, Var5)
+
+// So in Experiments.txt I have all the exp with their number snad the var values. So really all I need is the cells spike times so that all that data can be analyzed using matlab. Graphs can be made and also scoring. But matlab will also need:
+/*
+- Number of trials
+- Duration of CS
+- Duration of Trial
+- 
+*/

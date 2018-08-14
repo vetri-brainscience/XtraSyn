@@ -1,0 +1,73 @@
+// 
+// setting up the initial values for neuromodulators and sending commands to change these values at certain times for certain experiments 
+Mods2 = ACHlevel
+
+if (Experiment == 0 || Experiment == 1 || Experiment == 2) {
+ACHe = 2//Mods2
+ACHc = 2//Mods2
+
+Plasticity = 1
+
+ACH2 =Mods2
+Da2 =Mods2
+
+ACH =2
+Da = 2
+LearningShutDown_pyr2pyr = 0
+LearningShutDown_inter2pyr = 0
+
+} else {
+}
+
+
+ACH_pyr2pyr = ACH
+DA_pyr2pyr = Da
+ACH_mossy = ACH
+DA_mossy = Da
+ACH_inter2pyr = ACH
+ACH_IZH = ACH
+DA_inter2pyr = Da
+DA_IZH = Da
+
+
+
+// Setting the parameters simulation time step and duration
+dttime  = .1 //.025
+numsteps = 1/dttime
+
+if (Experiment == 0 ) {
+  tstop = 3000
+  {printf("//////////////////////////////////////\n")}
+  {printf("from protocol.hoc\n")}
+  {printf("tstop = %d\n", tstop)}
+  {printf("dttime = %.4f\n", dttime)}
+  {printf("//////////////////////////////////////\n")}
+} else {
+}
+
+{
+//xpanel("RunControl", 0)
+v_init = -65
+        //xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
+        //xbutton("Init & Run","run()")
+        //xbutton("Stop","stoprun=1")
+//runStopAt = 5
+        //xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 )
+//runStopIn = 1
+        //xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
+        //xbutton("Single Step","steprun()")
+//t = tstop
+//xvalue("t","t", 2 )
+tstop = tstop
+          //xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
+dt = dttime //.025
+          //xvalue("dt","dt", 1,"setdt()", 0, 1 )
+steps_per_ms = numsteps //40
+          //xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
+//screen_update_invl = 10 //0.05
+          //xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
+//realtime = 2.82
+          //xvalue("Real Time","realtime", 0,"", 0, 1 )
+//xpanel(800,8) // 2000
+}
+	

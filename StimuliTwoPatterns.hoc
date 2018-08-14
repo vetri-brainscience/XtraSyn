@@ -1,0 +1,171 @@
+// Sets up the stimuli for experiments 0 and 2.  And contains a few functions that are necessary for delivering stimuli in general. 
+objref pool
+pool = new Vector(Totals.x(EC))
+pool.indgen(0, 29, 1)
+
+obfunc GenerateVector () { localobj picked
+length = $1
+picked = new Vector()
+
+while (picked.size() < length) {
+		r = rand.repick()
+		t = int(r * (Totals.x(EC)))
+			if (pool.contains(t)) {
+				picked.append(t)
+				pool.remove(pool.indwhere("==", t))
+			}
+			
+	//	printf("picked %g length of picked is: %g \n", t, picked.size())
+	}
+
+	return(picked)
+}
+
+
+objref Stims
+Stims = new List()
+ 
+
+objref stim, nc[inpTotal * 20], netsyn[inpTotal * 20]
+
+proc applyStim() { localobj localStim, localPat
+	localStim = $o1
+	localPat = $o2
+  weight = $3
+	
+	for i = 0, localPat.size() -1 {
+		inpCell[localPat.x(i)].soma netsyn[k] = new pyr2pyr(0.9)
+	netsyn[k].initW = weight	//10.0
+	netsyn[k].Wmax = weight	//10.0 //1.0
+	nc[k] = new NetCon(stim,netsyn[k])
+	nc[k].delay = 0
+	nc[k].weight = 1 //0.2
+  	
+	printf("applied stim to cell %g\n", localPat.x(i))
+		k+=1 
+	}
+
+	
+}
+	
+	objref Pat1, Pat2, Pat3
+	Pat1 = new Vector()
+	Pat1 = GenerateVector(10)
+	
+	Pat2 = new Vector()
+	Pat2 = GenerateVector(10)
+	
+	Pat3 = new Vector()
+	Pat3 = Pat1 ///
+	
+	
+if (Experiment == 2) {
+	///Stims /////////
+StimCount = 21
+StimSpace = tstop / StimCount
+StimDurRatio = 250 / StimSpace
+StimSpaceRatio = StimSpace / tstop
+
+
+ k = 0
+for j = 0, StimCount-1 { 
+  stim= new NetStim(0.5)
+  stim.interval = 80
+  stim.start = j * (StimSpace)
+  stim.number = (StimSpace * StimDurRatio) / stim.interval
+	
+	if (j < 11) {	
+		if (j%2) {
+			applyStim (stim, Pat1,15)	
+		} else {
+			applyStim (stim, Pat2, 15)
+		}
+		
+	} else {		
+		for h = 0, j - 10 -1 {
+		Pat3.x(h) = Pat2.x(h)
+		}
+		applyStim(stim, Pat3, 15)
+	}
+Stims.append(stim)
+}
+}// if experiment
+
+
+if (Experiment ==0) {
+///Stims /////////
+StimCount = 16
+StimSpace = tstop / StimCount
+StimDurRatio = 250 / StimSpace
+StimSpaceRatio = StimSpace / tstop
+
+
+for j = 0, StimCount-1 { 
+ stim= new NetStim(0.5)
+   stim.interval = 80
+  stim.start = j * (StimSpace)
+    stim.number = (StimSpace * StimDurRatio) / stim.interval
+	
+	if (j < 6) {	
+		applyStim (stim, Pat1, 15)	
+	
+	} else {		
+		for h = 0, j - 6 {
+		Pat3.x(h) = Pat2.x(h)
+		}
+		applyStim(stim, Pat3, 15)
+	}
+	
+	Stims.append(stim)
+}
+} //if experiment
+	
+	
+	
+
+	
+	obfunc ReplaceNeurons() {localobj picked, before
+number = $1
+picked = new Vector()
+before = new Vector()
+before = $o2
+picked = before
+
+success = 0
+	while (success < number) {
+		r = rand.repick()
+		t = int(r * (Totals.x(EC)))
+			if (pool.contains(t)) {
+				picked.x(success) = t
+				pool.remove(pool.indwhere("==", t))
+				success = success + 1
+				//printf("replaced %g element with %g \n", success, t)
+			}		
+	}
+return(picked)
+}
+
+
+obfunc ReplaceNeuron() {localobj picked, before
+number = $1
+picked = new Vector()
+before = new Vector()
+before = $o2
+picked = before
+
+success = 0
+	while (success < 1) {
+		r = rand.repick()
+		t = int(r * (Totals.x(EC)))
+			if (pool.contains(t)) {
+				picked.x(number) = t
+				pool.remove(pool.indwhere("==", t))
+				//printf("replaced %g element with %g \n", success, t)
+				success = success + 1
+			}		
+	}
+return(picked)
+}
+	
+	
+	

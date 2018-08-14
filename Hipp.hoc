@@ -1,0 +1,179 @@
+
+load_file("Template.hoc")
+//load_file("nrngui.hoc")
+load_file("stdrun.hoc")
+load_file("ReadExperiments.hoc")
+
+// Setting the parameters to run the simulations from function abc() in MyHip.hoc
+lambda = 10    //changed on 10thJuly2018
+MyFactor = 2.0
+printf("--------------------------------------------------")
+{printf("---------------------- MyFactor = %d ---------------!\n", MyFactor)}
+printf("--------------------------------------------------")
+
+strdef outPath // Specify the folder for the simulation output files
+outPath="./Outputs/"
+
+ACHlevel = 1
+Mods2 = ACHlevel
+
+// the value assigned to the Experiment variable determines which experiment to run as follows:
+// Experiment = 2  // Learn two patterns and test retrieving one of them
+Experiment = 0  // pattern completion and separation experiment
+// Experiment = 1  // fear conditioning and extinction experiment
+// Experiment = 4   // short experiment for network temporal dynamics used to produce figure 10d
+//Experiment = 3  // testing network stability with increasing amounts of input
+//Experiment = 5
+strdef expSig // a user defined unique string that gets incorporated into the names of the output files from the simulation, so that they can be easily identified as belonging to this experiment in MATLAB.
+expSig = "full"
+
+// Initializing the random process using the seed number from the file seed.txt
+
+//ropen("seed.txt")
+//seed = fscan()
+
+
+//{printf("---------------------- Seed = %d ---------------!\n", seed)}
+{printf("from Hipp.hoc : ------seed is = %d ---------param (lambda) = %d (Hz)\nsm = %g (ms)\tcodestr = %s\n", seed, lambda, (1/lambda)*1000, codestr)}
+//seed is comming from the MyHipp.hoc!!
+//codestr is also coming from the MyHipp.hoc !!
+//codestr is a string added to the output filenames!!
+
+//printf ("seed is : %g", seed)
+objref rand
+rand = new Random(seed) 
+firstValue = rand.uniform(0,1)
+objref cvode, fih[2]
+cvode = new CVode()
+
+//fih[1]=new FInitializeHandler(0,"Commands()")
+
+ 
+load_file("Protocol.hoc") // Loading protocol depending on type of experiment and levels of neuromodulator
+
+inpTotal = 30 // EC
+excTotal = 63 // CA3 principal
+CA3oTotal = 8
+CA3bTotal  = 8
+DGexcTotal = 384 
+DGbTotal = 32
+DGhTotal = 32
+DGinhTotal = 96
+
+showNeurons = 0
+	ShowArea = 1  // 1 for CA3 and 2 for DG
+diagnostics = 0
+
+wACH = .05 //.1
+
+///////// Cells //////////
+objref excCell[excTotal], inpCell[inpTotal],inpIzh[inpTotal], excIzh[excTotal], DGexcCell[DGexcTotal], DGinhCell[DGinhTotal], DGexcIzh[DGexcTotal], DGinhIzh[DGinhTotal], ECsynNum[inpTotal]
+objref CA3eCells, CA3oCells, CA3bCells, ECCells, DGgCells, DGhCells, DGbCells
+
+ CA3eCells = new List()
+ CA3oCells = new List()
+ CA3bCells = new List()
+ ECCells = new List()
+ DGgCells = new List() 
+ DGhCells = new List() 
+ DGbCells = new List()
+
+for i = 0, inpTotal -1  {
+  inpCell[i] = new IzhiCell_EC()
+ECCells.append(inpCell[i])
+}
+
+for i = 0, excTotal-1 {
+excCell[i] = new IzhiCell_CA3()
+excCell[i].soma.g_tonic = 0.0e-12   //siemens per cm2
+printf("CA3 execCell[%d].g_tonic = %g siemens percm2\n",  i, excCell[i].soma.g_tonic) //added on 14thJuly2018 vetri
+CA3eCells.append(excCell[i])
+}
+
+objref CA3oCell[CA3oTotal], CA3bCell[CA3bTotal], DGhCell[DGhTotal], DGbCell[DGbTotal]
+for i = 0, CA3oTotal -1{
+	CA3oCell[i] = new IzhiCell_OLM()
+	CA3oCells.append(CA3oCell[i])
+}
+
+for i = 0, CA3bTotal -1 {
+	CA3bCell[i] = new IzhiCell_BC()
+	CA3bCells.append(CA3bCell[i])
+}
+
+
+for i = 0, DGexcTotal-1 {
+DGexcCell[i] = new IzhiCell_GC()
+  DGgCells.append(DGexcCell[i])
+}
+
+for i = 0, DGhTotal -1{
+	DGhCell[i] = new IzhiCell_OLM()
+	DGhCells.append(DGhCell[i])
+}
+
+for i = 0, DGbTotal -1 {
+	DGbCell[i] = new IzhiCell_BC()
+	DGbCells.append(DGbCell[i])
+}
+
+
+
+///////// Connections ///////////////////
+load_file("Connect.hoc")
+
+////////  Random initialization of cells membrane potential /////////
+proc custominit() {
+  for li = 0, Cells.count() -1 {
+	  for ii = 0, Cells.o(li).count() -1 {
+	  OriginalVolt = Cells.o(li).o(ii).soma.v
+	  Cells.o(li).o(ii).setv( rand.normal(OriginalVolt-5, 10) )
+		
+		// Cells.setu(rand.uniform(0.001, 0.09))
+		
+	  // Cells.o(li).o(ii).IzhiSoma.uinit = rand.uniform(0.0001, 0.009)
+        
+	}
+	
+  }
+  finitialize()
+}
+load_file("custominit.hoc")
+
+///////// Stimuli //////////
+strdef Stimfile
+sprint(Stimfile, "Stimuli_vetri.hoc")
+{print Stimfile}
+if (Experiment == 0) {
+  load_file(Stimfile)
+} else {
+}
+{print "Finished applying stimuli!"}
+
+////////////// Graphs /////////////////
+// All graphing is done in Matlab
+
+
+load_file("Record.hoc") // Recording membrane potentials and synaptic currents
+
+//Commands() 
+
+/////////////// IMPORT PARAMETERS FOR FILING
+//codstr(string) and the seed (value) is also coming from the MyHipp.hoc !!
+//codestr is a string added to the output filenames!!
+strdef IDstring
+sprint(IDstring, "%g%g%g%s_%g_%s_", Mods2, Experiment, seed, expSig, param, codestr)
+strdef IDstrWeights
+sprint(IDstrWeights, "%g%g%g", 2, 0, seed)
+
+printf("******* Starting run() ****************\n")
+run()
+load_file("WriteOutput.hoc") // Writes the recorded outputs from the simulation into text files
+printf("******* run() completed!! **************\n")
+
+CTRLG = 7 // ASCII code for ^G or "bell" character
+strdef foo
+{sprint(foo,"%c",CTRLG)}
+//print foo
+//print foo
+//print foo

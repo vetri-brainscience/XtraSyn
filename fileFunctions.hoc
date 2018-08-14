@@ -1,0 +1,18 @@
+/// file functions
+
+proc VecToFile () { localobj localfile, values, time
+strdef filename
+filename = $s1
+values = $o2
+time = $o3
+
+localfile = new File(filename)
+localfile.wopen()
+
+for l = 1, values.size() -1 {
+localfile.printf("%g %g\n", time.x(l), values.x(l))
+}
+
+localfile.close()
+
+}

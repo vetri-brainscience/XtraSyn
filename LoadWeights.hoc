@@ -1,0 +1,30 @@
+objref sw
+strdef filename
+
+
+sprint(filename,"%s%s%s",outPath, IDstrWeights, "SavedWeights.txt")
+sw = new File(filename)
+sw.ropen()
+
+objref loadedWeights
+loadedWeights = new Vector()
+loadedWeights.scanf(sw)
+
+sw.close()
+
+for s = 0, Syn.count() -1 {
+ 
+  if (Connections.x(s, 5) == 1 || Connections.x(s, 5) == 3) {
+  Syn.o(s).W_ampa = loadedWeights.x(s)
+  Syn.o(s).initW = loadedWeights.x(s)
+  } else {
+   if (Connections.x(s,5) == 0 || Connections.x(s, 5) == 2) {
+    Syn.o(s).W_gabaa = loadedWeights.x(s)
+	Syn.o(s).initW = loadedWeights.x(s)
+	
+   } else {
+   printf("\n ----------- Problem finding connection to load weight\n")
+    }
+  }
+
+}

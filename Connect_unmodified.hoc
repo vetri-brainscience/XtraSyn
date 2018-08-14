@@ -1,0 +1,360 @@
+load_file("MakeLocations.hoc")
+
+// Global Syn Con
+objref Syn, Con, ConRow, Connections, del
+del = new Vector()
+Syn = new List()
+Con = new List()
+Connections = new Matrix(1,6)
+firstRow = 1
+
+objref rC
+{rC = new Random(seed)} 
+
+
+proc AddtoGlobal () { localobj ConRow
+		Syn.append($o1)
+		Con.append($o2)
+		
+		
+		ConRow = new Vector()
+		ConRow.append(Connections.nrow-1, $3, $4, $5, $6, $7) 
+		Connections.setrow(Connections.nrow-1, ConRow) 
+		Connections.resize(Connections.nrow + 1, Connections.ncol)
+}
+
+objref synF, synM
+synF = new File()
+synF.ropen("./Inputs/Synapses.txt")
+synM= new Matrix()
+synM.scanf(synF, 30, 26)
+synF.close()
+//synM.printf()
+
+
+proc ConnectNeurons() {localobj lsyn, lcon, par, source, target
+
+preArea = $1
+preId = $2
+postArea = $3
+postId = $4
+
+source = $o5
+target = $o6
+SynapseType = $7
+par = $o8
+delayDistance = $9
+
+access source.soma
+
+if (SynapseType == 1) {
+target.soma lsyn = new pyr2pyr(0.9)
+lsyn.AlphaTmax_ampa = par.x(21)
+lsyn.Beta_ampa = par.x(22)
+lsyn.Cdur_ampa = par.x(23)
+lsyn.gbar_ampa = par.x(24)
+lsyn.Erev_ampa = par.x(16)
+
+lsyn.AlphaTmax_nmda = par.x(25)
+lsyn.Beta_nmda = par.x(26)
+lsyn.Cdur_nmda = par.x(27)
+lsyn.gbar_nmda = par.x(28)
+lsyn.Erev_nmda = par.x(16)
+}
+if (SynapseType == 0) {
+target.soma lsyn = new inter2pyr(0.9)
+lsyn.AlphaTmax_gabaa = par.x(21)
+lsyn.Beta_gabaa = par.x(22)
+lsyn.Cdur_gabaa = par.x(23)
+lsyn.gbar_gabaa = par.x(24)
+lsyn.Erev_gabaa = par.x(16)
+
+lsyn.AlphaTmax_gabab = par.x(25)
+lsyn.Beta_gabab = par.x(26)
+lsyn.Cdur_gabab = par.x(27)
+lsyn.gbar_gabab = par.x(28)
+lsyn.Erev_gabab = par.x(16)
+}
+
+
+lsyn.initW = par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
+
+lsyn.Wmax = par.x(1) * lsyn.initW
+lsyn.Wmin = par.x(2) * lsyn.initW
+delay = par.x(3) + delayDistance
+
+lcon = new NetCon(&v(0.5), lsyn, 0, delay, 1)
+
+lsyn.lambda1 = par.x(6)
+lsyn.lambda2 = par.x(7)
+lsyn.threshold1 = par.x(8)
+lsyn.threshold2 = par.x(9)
+lsyn.tauD1 = par.x(10)
+lsyn.d1 = par.x(11)
+lsyn.tauD2 = par.x(12)
+lsyn.d2 = par.x(13)
+lsyn.tauF = par.x(14)
+lsyn.f = par.x(15)
+
+lsyn.bACH = par.x(17)
+lsyn.aDA = par.x(18)
+lsyn.bDA = par.x(19)
+lsyn.wACH = par.x(20)
+
+	AddtoGlobal(lsyn, lcon, preArea, preId, postArea, postId, SynapseType)
+
+}
+
+objref Cells, Locs, Totals
+Cells = new List()
+Cells.append(ECCells)
+Cells.append(CA3eCells)
+Cells.append(CA3oCells)
+Cells.append(CA3bCells)
+Cells.append(DGgCells)
+Cells.append(DGhCells)
+Cells.append(DGbCells)
+
+Locs = new List()
+Locs.append(locEC)
+Locs.append(locCA3)
+Locs.append(locCA3o)
+Locs.append(locCA3b)
+Locs.append(locDG)
+Locs.append(locDGh)
+Locs.append(locDGb)
+
+
+Totals = new Vector()
+Totals.append(inpTotal)
+Totals.append(excTotal)
+Totals.append(CA3oTotal)
+Totals.append(CA3bTotal)
+Totals.append(DGexcTotal)
+Totals.append(DGhTotal)
+Totals.append(DGbTotal)
+
+
+EC2CA3e =0 
+EC2CA3b =1
+EC2DGg=2
+EC2DGb=3 
+DGg2CA3e=4
+DGg2CA3b=5
+CA3e2CA3e=6
+CA3e2CA3o=7
+CA3e2CA3b=8
+CA3o2CA3e=9
+CA3b2CA3e=10
+CA3b2CA3o=11
+DGg2DGh=12
+DGg2DGb=13
+DGh2DGg=14
+DGb2DGg=15
+DGb2DGh=16
+
+EC = 0
+CA3e = 1
+CA3o = 2
+CA3b = 3
+DGg = 4
+DGh = 5
+DGb = 6
+
+Excitatory = 1
+Inhibitory = 0
+
+Lamellar = 0
+Homogenous = 1
+AxonalPlexus = 2
+IntPyrFeedback = 3
+
+
+/////////////////CONNECT AREAS//////////////
+proc ConnectAreas() { localobj par
+preArea = $1
+postArea = $2
+pre2post = $3
+type = $4
+
+par = new Vector()
+synM.getcol(pre2post, par)
+ConPattern = par.x(5)
+
+	for b =0,  Totals.x(preArea) -1 {
+		for m = 0, Totals.x(postArea) -1 {
+		dx = Locs.o(postArea).x[0][m] - Locs.o(preArea).x[0][b]
+		dy = Locs.o(postArea).x[1][m] - Locs.o(preArea).x[1][b]
+		
+		if ((Locs.o(preArea).nrow + Locs.o(postArea).nrow) > 5) {
+		dz = Locs.o(postArea).x[2][m] - Locs.o(preArea).x[2][b]
+		dist = sqrt(dx^2 + dy^2 + dz^2) 
+		distxy = sqrt(dx^2 + dy^2)
+		} else {
+		dist = sqrt(dx^2 + dy^2)
+		distxy = dist
+		}
+
+		if (ConPattern == Lamellar) {
+			prob =	 par.x(4)/ (exp( ((abs(dx) -0)^2)/ (2 * (3^2))))
+		}
+		if (ConPattern == Homogenous) {
+			prob =	 par.x(4) 				
+		}
+		if (ConPattern == IntPyrFeedback || ConPattern == AxonalPlexus) {
+			c = par.x(4)
+			a = par.x(29)
+			
+			prob =	 a /(exp( ((abs(distxy) -0)^2)/ (2 * (c^2))))					
+		}
+		
+			if(rC.uniform(0,1) < prob){
+			
+/////DISTANCE CALCULATIONS NEED REIVISION
+			distDelay = 0.1* (0.5*dist + rC.normal(0,1.5)*(1-exp(-dist^2/3)) )		
+			del.append(distDelay)
+			ConnectNeurons(preArea,b,postArea,m, Cells.o(preArea).o(b), Cells.o(postArea).o(m), type, synM.getcol(pre2post), distDelay)	
+				// if (ConPattern == IntPyrFeedback){
+					// if (pre2post == CA3o2CA3e) { backProject = CA3e2CA3o}
+					// if (pre2post == DGh2DGg) { backProject = DGg2DGh}
+					// printf("\nin the loop at b %g m %g", b , m)
+					// if (i > (Totals.x(preArea)-2)) {break}
+
+				// ConnectNeurons(postArea,j,preArea,i, Cells.o(postArea).o(m), Cells.o(preArea).o(i), Excitatory, synM.getcol(backProject), distDelay)	
+				
+				// } // if ConPattern
+			}
+		}
+	}
+}
+
+ConnectMF = 0
+
+
+ConnectAreas(EC, CA3e, EC2CA3e, Excitatory)
+ConnectAreas(EC, CA3b, EC2CA3b, Excitatory)
+
+ConnectAreas(DGg, CA3b, DGg2CA3b, Excitatory) 
+
+ConnectAreas(CA3e, CA3e, CA3e2CA3e, Excitatory) 
+ConnectAreas(CA3e, CA3b, CA3e2CA3b, Excitatory) 
+
+ConnectAreas(CA3o, CA3e, CA3o2CA3e, Inhibitory)
+ConnectAreas(CA3b, CA3e, CA3b2CA3e, Inhibitory)
+
+ConnectAreas(CA3b, CA3o, CA3b2CA3o, Inhibitory)
+
+ConnectMF = 1
+
+ConnectAreas(EC, DGg, EC2DGg, Excitatory)
+ConnectAreas(EC, DGb, EC2DGb, Excitatory)
+
+ConnectAreas(DGg, DGb, DGg2DGb, Excitatory)
+
+ConnectAreas(DGh, DGg, DGh2DGg, Inhibitory)
+ConnectAreas(DGb, DGg, DGb2DGg, Inhibitory)
+
+ConnectAreas(DGb, DGh, DGb2DGh, Inhibitory)
+
+// Lamellar. 
+	//prob = prob =	 par.x(4) /(1+(1-exp(-abs(dx)^2/3)))	
+// pyr-int feedback loop. Has to be the same loop. Or the same seed? Theoritically I can connect pyr to int, same the seed and then go through the same seed and loop to connect int to pyr.  
+	// it shoudl be based off of interneuron axonal plexus.
+// Random. Turn off the dist component.
+	//prob = par.x(4)
+// Mossy  (If 30 of CA3 cells are active, then a recruited gc have a 50% chance of recruiting a new CA3 neuron)
+// within axonal plexus.
+	// prob = par.x(4)/dist
+
+for y = 0, Connections.nrow -1 {
+if ((Connections.x(y, 1) == CA3o) && (Connections.x(y,3) == CA3e)) {
+		prePyr = Connections.x(y,4)
+		postInt = Connections.x(y,2)
+		//printf("from pre %g  to  post %g \n", prePyr, postInt)
+		ConnectNeurons(CA3e, prePyr , CA3o, postInt, Cells.o(CA3e).o(prePyr), Cells.o(CA3o).o(postInt), Excitatory, synM.getcol(CA3e2CA3o), 0.1)
+
+}
+}
+
+for y = 0, Connections.nrow -1 {
+if ((Connections.x(y, 1) == DGh) && (Connections.x(y,3) == DGg)) {
+		prePyr = Connections.x(y,4)
+		postInt = Connections.x(y,2)
+		ConnectNeurons(DGg, prePyr , DGh, postInt, Cells.o(DGg).o(prePyr), Cells.o(DGh).o(postInt), Excitatory, synM.getcol(DGg2DGh), 0.1)
+
+}
+}
+
+//////// Connecting MF
+if (ConnectMF > 0) {
+postArea = CA3e
+preArea = DGg
+for s =0,  Totals.x(DGg) -1 {
+		n = 0
+		while (n < 2) {
+			r = rand.repick()
+			t = int(r * (Totals.x(CA3e) -1))
+			
+		dx = Locs.o(postArea).x[0][t] - Locs.o(preArea).x[0][s]
+		dy = Locs.o(postArea).x[1][t] - Locs.o(preArea).x[1][s]
+		
+		if ((Locs.o(preArea).nrow + Locs.o(postArea).nrow) > 5) {
+		dz = Locs.o(postArea).x[2][t] - Locs.o(preArea).x[2][s]
+		dist = sqrt(dx^2 + dy^2 + dz^2) 
+		} else {
+		dist = sqrt(dx^2 + dy^2)
+		}
+
+			prob =	 1/ (exp( ((abs(dx) -0)^2)/ (2 * (2^2)))) // Standard deviation of 2 compared to 3 in pp projections More limited longitudianal spread
+			
+			if(rC.uniform(0,1) < prob){
+				n = n+1
+				distDelay = 0.1* (0.5*dist + rC.normal(0,1.5)*(1-exp(-dist^2/3)) )	
+				ConnectNeurons(preArea,s,postArea,t, Cells.o(preArea).o(s), Cells.o(postArea).o(t), Excitatory, synM.getcol(DGg2CA3e), distDelay)
+			}
+	}
+}
+} // if ConnectMF
+	
+// delay statisitics
+// printf("\nDelays average %g \nMin : %g\n Max: %g\n stdev: %g\n stderr: %g", del.mean(), del.min(),del.max(), del.stdev(), del.stderr())			
+//////////////////// Some data access functions
+obfunc GetSynapses () {localobj coll 
+coll = new Vector()
+preA = $1
+postA = $2
+	for y =0, Connections.nrow -1 {
+		if ( (Connections.x(y, 1) == preA) && (Connections.x(y,3) == postA)) {
+			coll.append(Connections.x(y,0))
+		}
+	}
+return (coll)
+}
+
+obfunc GetPre () { localobj coll 
+coll = new Vector()
+postArea = $1
+postNum = $2
+	for y =0, Connections.nrow -1 {
+		if ( (Connections.x(y, 3) == postArea) && (Connections.x(y,4) == postNum)) {
+			coll.append(Connections.x(y,0))
+		}
+	}
+return (coll)
+}
+
+obfunc GetPreFromArea () { localobj coll 
+coll = new Vector()
+postArea = $1
+postNum = $2
+preArea = $3
+	for y =0, Connections.nrow -1 {
+		if ( (Connections.x(y, 3) == postArea) && (Connections.x(y,4) == postNum) && (Connections.x(y, 5) == preArea) ) {
+			coll.append(Connections.x(y,0))
+		}
+	}
+return (coll)
+}
+
+
+

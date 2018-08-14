@@ -1,0 +1,117 @@
+///// Saving cell locations
+objref locEC,locCA3,typesCA3,locDG,typesDG, locCA3o, locCA3b, locDGh, locDGb
+
+{locEC = new Matrix(3,inpTotal)}
+{locCA3 = new Matrix(3,excTotal)}
+{locCA3o = new Matrix(3,CA3oTotal)}
+{locCA3b = new Matrix(3,CA3bTotal)}
+
+{locDG = new Matrix(3,DGexcTotal)}
+{locDGh = new Matrix(3, DGhTotal)}
+{locDGb = new Matrix(3, DGbTotal)}
+
+// CA3 1-3 1-3 5-8 10
+//-----SET CELL Locations-----------
+
+// EC cells
+n=0
+  for(y=0.25;y<=3;y+=0.5) {
+    for(x=1.5;x<=15;x+=3) {
+	  z = 10
+	  locEC.x[0][n] = x
+	  locEC.x[1][n] = y	  
+	  locEC.x[2][n] = z
+	n += 1
+    }
+  }
+  
+// CA3 Cells
+ 
+  
+   // OLM Interneurons
+ n=0
+  for(z=2;z<2.5;z+=2) {
+   for(y=0.75;y<=3;y+=1.5) {
+    for(x=1;x<=15;x+=4) {
+      locCA3o.x[0][n] = x
+	  locCA3o.x[1][n] = y
+	  locCA3o.x[2][n] = z	
+
+	n += 1
+    }
+  }
+  }
+  
+   // Basket cell Interneurons
+ n=0
+  for(z=2;z<2.5;z+=2) {
+   for(y=0.75;y<=3;y+=1.5) {
+    for(x=1.5;x<=15;x+=4) {
+      locCA3b.x[0][n] = x
+	  locCA3b.x[1][n] = y
+	  locCA3b.x[2][n] = z	
+
+	n += 1
+    }
+  }
+  }
+  
+  // Principal Cells   
+  n=0
+    for(z=1;z<4;z+=1) {
+    for(y=0.5;y<=3;y+=1) {
+    for(x=0.5;x<=15;x+=2.3) {
+      locCA3.x[0][n] = x
+	  locCA3.x[1][n] = y
+	  locCA3.x[2][n] = z		  
+	  
+	n += 1
+    }
+  }
+  }
+ 
+ // DG Cells
+  
+  // HIPP Interneurons
+ n=0
+    for(z=6;z<7;z+=1) {  
+   for(y=0.9375;y<=7.5;y+=1.875) {
+    for(x=0.8375;x<=15;x+=1.875) {
+	//    for(x=2;x<=15;x+=3.7) {
+      locDGh.x[0][n] = x
+	  locDGh.x[1][n] = y
+	  locDGh.x[2][n] = z	
+	  n += 1
+    }
+  }
+  }
+  
+  
+  // Basket Interneurons
+ n=0
+    for(z=6;z<7;z+=1) {  
+   for(y=0.9375;y<=7.5;y+=1.875) {
+    for(x=0.9375;x<=15;x+=1.875) {
+		//    for(x=0.94;x<=15;x+=3.7) {
+      locDGb.x[0][n] = x
+	  locDGb.x[1][n] = y
+	  locDGb.x[2][n] = z	
+	  n += 1
+    }
+  }
+  }
+  
+  // Principal Cells
+  n=0
+    for(z=5;z<8;z+=1) {
+	for(y=0.47;y<=7.5;y+=0.94) {
+    for(x=0.47;x<=15;x+=0.94) {
+      locDG.x[0][n] = x
+	  locDG.x[1][n] = y
+	  locDG.x[2][n] = z	
+	  n += 1
+    }
+  }
+  }
+
+	

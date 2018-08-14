@@ -1,0 +1,19 @@
+// proc custominit() {
+  // for each cell that needs to start at some potential different from v_init {
+    // for each section in this cell {
+      // v = whatever the starting potential of this cell should be
+    // }
+  // }
+  // finitialize()
+// }
+
+proc init() {
+  finitialize(v_init)
+  custominit()
+  if (cvode.active()) {
+    cvode.re_init()
+  } else {
+    fcurrent()
+  }
+  frecord_init()
+}

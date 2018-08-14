@@ -1,0 +1,28 @@
+// Uses object NetStim to deliver one action potential to a synapse associated with EC neurons.  It divides the experiment time into 30 trials, and stimulates an increasing number of EC neurons each trial. 
+StimFreq = 12 //(Hz)
+StimCount = 30
+StimSpace = tstop / StimCount
+StimDurRatio = 0.5
+
+load_file("StimuliNoise.hoc") // Delivers background noise to CA3 cells 
+pool = new Vector(Totals.x(EC))
+pool.indgen(0, 29, 1)
+
+	objref Pat1, Pat2
+	Pat1 = new Vector()
+	// Pat1 = GenerateVector(1)
+
+	
+for j = 0, StimCount-1 {
+	stim= new NetStim(0.5)
+	stim.interval = (1/ StimFreq) * 1000
+	stim.start = j * (StimSpace) + 1
+	stim.number = 1 // (StimSpace * StimDurRatio) / stim.interval
+
+	Pat2 = new Vector()
+	Pat2 = GenerateVector(1)
+	Pat1.append(Pat2.x(0))
+	
+	applyStim(stim, Pat1, 10)
+	Stims.append(stim)
+} //for j

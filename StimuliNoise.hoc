@@ -1,0 +1,53 @@
+
+objref synLi, conLi, vecLi, stimLi
+synLi = new List()
+conLi = new List()
+vecLi = new List()
+stimLi = new List()
+
+
+obfunc GenPoisson() { localobj train
+train = new Vector()
+time = 0
+lambda = $1
+T = $2
+
+	while (time < T) {
+		isi = - log( rand.uniform(0,1) ) / lambda
+		time = time + isi
+		train.append(time)
+	}
+return(train)
+}
+
+proc ApplyRandomInput () {localobj synli, conli, vecli, stimli, cellsli
+// cellsli = new List()
+cellsli = $o1
+lambda = $2
+T =  $3
+weight = $4
+  
+for kk = 0, cellsli.count()-1 {
+	stimli = new VecStim()
+	vecli = GenPoisson(lambda, T)
+	// vecli = removeZeros(vecli)
+	stimli.play(vecli)
+	
+	cellsli.o(kk).soma synli = new pyr2pyr(0.9)
+	conli = new NetCon(stimli, synli, 0,0,1)
+		synli.Wmax = weight
+		synli.Wmin = 0
+		synli.initW = weight
+		
+		synLi.append(synli)
+		conLi.append(conli)
+		vecLi.append(vecli)
+		stimLi.append(stimli)
+}
+
+} // ApplyRandom
+
+// Background NOISE
+ApplyRandomInput(Cells.o(1), 0.5/1000, tstop, 5) // CA3 
+ApplyRandomInput(Cells.o(4), 0.5 /1000, tstop, 5)// DG 
+

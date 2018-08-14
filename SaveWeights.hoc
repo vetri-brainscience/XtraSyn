@@ -1,0 +1,34 @@
+SaveWeights = 1
+objref SavedWeights
+SavedWeights = new List()
+ 
+
+ 
+objref swFile
+strdef swFilename
+sprint(swFilename, "%s%s%s", outPath, IDstrWeights, "SavedWeights.txt")
+
+if (SaveWeights > 0) {
+swFile = new File(swFilename)
+
+swFile.wopen()
+
+swFile.printf("\n")
+
+for s = 0, Syn.count() -1 {
+ 
+  if (Connections.x(s, 5) == 1 || Connections.x(s, 5) == 3) {
+  swFile.printf("%g\n", Syn.o(s).W_ampa)
+  } else {
+   if (Connections.x(s,5) == 0 || Connections.x(s, 5) == 2) {
+    swFile.printf("%g\n", Syn.o(s).W_gabaa)
+   } else {
+   printf("\n ----------- Problem finding connection to record\n")
+    }
+  }
+
+}
+		
+swFile.close()
+}
+

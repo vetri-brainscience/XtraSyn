@@ -1,0 +1,23 @@
+objref ExpMatrix, ExpFile, ExperimentsNo
+strdef filename, path
+
+path = "./Inputs/"
+
+sprint(filename,"%s%s",path,"Experiment.txt")
+ExperimentsNo = new File(filename)
+ExperimentsNo.ropen()
+
+objref vvv
+vvv = new Vector()
+vvv.scanf(ExperimentsNo)
+vvv.printf()
+
+ExperimentsNo.close()
+
+ExpNo = vvv.x(0)
+Var1 = vvv.x(1)
+Var2 = vvv.x(2)
+Var3 = vvv.x(3)
+Var4 = vvv.x(4)
+Var5 = vvv.x(5)
+

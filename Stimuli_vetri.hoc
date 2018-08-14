@@ -1,0 +1,64 @@
+// Sets up the stimuli for experiments 0 and 2.  And contains a few functions that are necessary for delivering stimuli in general. 
+N = Totals.x(EC)
+objref pool
+pool = new Vector(Totals.x(EC))
+//{printf("\n----------------- Totals.x(EC) = %d ---------------------------\n", Totals.x(EC))}
+//{printf("\n----------------- inpTotal = %d ---------------------------\n", N)}
+pool.indgen(0, N-1, 1)
+
+obfunc GenerateVector () { localobj picked
+length = $1
+picked = new Vector()
+
+while (picked.size() < length) {
+		r = rand.repick()
+		t = int(r * (Totals.x(EC)))
+			if (pool.contains(t)) {
+				picked.append(t)
+				pool.remove(pool.indwhere("==", t))
+			}
+			
+//	{printf("picked %g length of picked is: %g \n", t, picked.size())}
+	}
+	return(picked)
+}
+
+
+objref Stims
+Stims = new List()
+
+//////////////////////
+objref stim 
+
+objref stim, nc[inpTotal * 20], netsyn[inpTotal * 20]
+objref Pat1
+Pat1 = new Vector()
+Pat1 = GenerateVector(N)
+//{printf("Pat1.size() = %d\n\n", Pat1.size())}
+  
+if (Experiment ==0) {
+///Stims /////////
+StimCount = 1
+StimSpace = tstop / StimCount
+StimDurRatio = 250 / StimSpace
+StimSpaceRatio = StimSpace / tstop
+for i = 0, N-1 { 
+        stim= new NetStim(0.5)
+        stim.interval = (1/lambda)*1000
+        //stim. inerval in ms calculated from lambda(Hz)
+        stim.start = 0
+        stim.number = 10000
+        stim.noise = 1
+		Stims.append(stim)
+       
+        inpCell[Pat1.x(i)].soma netsyn[i] = new pyr2pyr(0.9)
+	      netsyn[i].initW = 10.0
+	      netsyn[i].Wmax = 10.0 //1.0
+	      nc[i] = new NetCon(stim,netsyn[i], 0, 0, 1)
+    	 // nc[i].delay = 0
+	     // nc[i].weight = 1 //0.2
+//        {printf("Applied NetStim to Pat1.x(%d).soma netsyn[%d]\n", i, i)}     
+}    
+    {printf("Stimuli all applied")}
+} //if experiment
+
