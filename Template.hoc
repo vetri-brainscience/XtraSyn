@@ -242,7 +242,7 @@ begintemplate IzhiCell_BC
 			
 			// added tonic gaba mechanism - vetri
 			insert tonic
-			g_tonic =  0.000008  //0.001  (siemens/cm2) is 8microS/cm2 here 
+			g_tonic =  0.0  //0.001  (siemens/cm2) is 8microS/cm2 here 
 			e_tonic = -74		//mV
 			/////////
 			/////////

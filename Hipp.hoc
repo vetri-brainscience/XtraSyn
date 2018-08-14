@@ -6,9 +6,9 @@ load_file("ReadExperiments.hoc")
 
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
 lambda = 10    //changed on 10thJuly2018
-MyFactor = 2.0
+myFactor = 0.2
 printf("--------------------------------------------------")
-{printf("---------------------- MyFactor = %d ---------------!\n", MyFactor)}
+{printf("---------------------- myFactor = %d ---------------!\n", myFactor)}
 printf("--------------------------------------------------")
 
 strdef outPath // Specify the folder for the simulation output files

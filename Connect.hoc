@@ -79,8 +79,10 @@ lsyn.Erev_gabab = par.x(16)
 lsyn.tau1_xtra = 7   //ms     
 lsyn.tau2_xtra = 200  //ms
 lsyn.e_xtra = -74     //mV
-lsyn.gbar_gabaa_xtra = 0.0*(lsyn.gbar_gabaa)
+lsyn.gbar_gabaa_xtra = myFactor*(lsyn.gbar_gabaa)
+printf("myFactor = %0.4f \n", myFactor) 
 printf("lsyn.gbar_gabaa_xtra = %g (uS)\n", lsyn.gbar_gabaa_xtra) 
+printf("lsyn.gbar_gabaa = %g (uS)\n", lsyn.gbar_gabaa)
 //this gbar_gabaa_xtra = 0.0 (uS) is in the parameter block in synapse_inter2py.mod file
 //********* Note ***************
 // These xtra syaptic receptor parameters are from the following
