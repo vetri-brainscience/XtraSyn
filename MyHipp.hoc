@@ -3,7 +3,6 @@ print "---------------------"
 proc abc() {
   seed = $1
   param = $2  
-  //param = lambda IS NOT here param is set to 10Hz in Hipp.hoc
   codestr = "_140818_"
   {printf("from MyHipp.hoc : ------seed is = %d ---------sm = %d (Hz)\tcodestr = %s\n", seed, param, codestr)}
   {load_file("Hipp.hoc")}

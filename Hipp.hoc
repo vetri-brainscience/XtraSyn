@@ -6,9 +6,9 @@ load_file("ReadExperiments.hoc")
 
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
 lambda = 10    //changed on 10thJuly2018
-myFactor = 0.2
+myFactor = param
 printf("--------------------------------------------------")
-{printf("---------------------- myFactor = %d ---------------!\n", myFactor)}
+{printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
 printf("--------------------------------------------------")
 
 strdef outPath // Specify the folder for the simulation output files
@@ -86,7 +86,7 @@ ECCells.append(inpCell[i])
 for i = 0, excTotal-1 {
 excCell[i] = new IzhiCell_CA3()
 excCell[i].soma.g_tonic = 0.0e-12   //siemens per cm2
-printf("CA3 execCell[%d].g_tonic = %g siemens percm2\n",  i, excCell[i].soma.g_tonic) //added on 14thJuly2018 vetri
+//printf("CA3 execCell[%d].g_tonic = %g siemens percm2\n",  i, excCell[i].soma.g_tonic) //added on 14thJuly2018 vetri
 CA3eCells.append(excCell[i])
 }
 
