@@ -36,7 +36,7 @@ dttime  = .1 //.025
 numsteps = 1/dttime
 
 if (Experiment == 0 ) {
-  tstop = 3000
+  //tstop = 3000
   {printf("//////////////////////////////////////\n")}
   {printf("from protocol.hoc\n")}
   {printf("tstop = %d\n", tstop)}

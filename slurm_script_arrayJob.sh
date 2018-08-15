@@ -16,5 +16,5 @@ pwd; hostname; date
 # Print this sub-job's task ID
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
 
-./MyBatch.sh $SLURM_ARRAY_TASK_ID
+./MyBatch.sh $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_JOB_ID
 date
