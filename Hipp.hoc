@@ -7,7 +7,7 @@ load_file("ReadExperiments.hoc")
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
 lambda = 10    //changed on 10thJuly2018
 myFactor = param
-tstop = 6000
+tstop = 1000
 {printf("--------------------------------------------------")}
 {printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
 {printf("---------------------- tstop = %d ---------------!\n", tstop)}
@@ -164,8 +164,9 @@ load_file("Record.hoc") // Recording membrane potentials and synaptic currents
 /////////////// IMPORT PARAMETERS FOR FILING
 //codstr(string) and the seed (value) is also coming from the MyHipp.hoc !!
 //codestr is a string added to the output filenames!!
-strdef IDstring
-sprint(IDstring, "%g%g%g%s_%g_%s_", Mods2, Experiment, seed, expSig, param, codestr)
+strdef IDstring, jobIDstring
+sprint(jobIDstring, "%s_%d", codestr, jobid)
+sprint(IDstring, "%g%g%g%s_%g_%s_", Mods2, Experiment, seed, expSig, param, jobIDstring)
 strdef IDstrWeights
 sprint(IDstrWeights, "%g%g%g", 2, 0, seed)
 

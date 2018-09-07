@@ -7,8 +7,8 @@
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --partition=all
 #SBATCH --time=1:00:00               # Time limit hrs:min:sec
-#SBATCH --output=serial_test_%j.out   # Standard output and error log
-#SBATCH --error=serial_test_%j.err
+#SBATCH --output=./Report/serial_test_%j.out   # Standard output and error log
+#SBATCH --error=./Report/serial_test_%j.err
 pwd; hostname; date
 
 
