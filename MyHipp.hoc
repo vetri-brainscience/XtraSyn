@@ -1,15 +1,16 @@
-strdef codestr, datestr, jobidstr
+strdef codestr, datestr
 print "---------------------"
 proc abc() {
   seed = $1
   param = $2  
   jobid = $3
-  sprint(jobidstr, "%g",  jobid)
+  codestr="_A"
   system("date +%d%m%Y", datestr)
-  codestr = datestr+"_"+jobidstr
   {printf("from MyHipp.hoc : ------seed is = %d ---------sm = %d (Hz)\tcodestr = %s\n", seed, param, codestr)}
   {printf("from MyHipp.hoc : ------param is = %f\n", param)}
-  {printf("from MyHipp.hoc : ------jobid is = %s\n", jobidstr)}
+  {printf("from MyHipp.hoc : ------jobid is = %d\n", jobid)}
   {printf("from MyHipp.hoc : ------date_string is = %s\n", datestr)}
   {load_file("Hipp.hoc")}
 }
+
+abc($1, $2, $3)
