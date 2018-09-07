@@ -11,7 +11,7 @@ tstop = 6000
 {printf("--------------------------------------------------")}
 {printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
 {printf("---------------------- tstop = %d ---------------!\n", tstop)}
-{printf("---------------------- JobID = %d ---------------!\n", jobid)}
+{printf("---------------------- JobID = %s ---------------!\n", jobidstr)}
 {printf("--------------------------------------------------")}
 
 strdef outPath // Specify the folder for the simulation output files
