@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=vetri_serial_job_test    # Job name
+#SBATCH --job-name=vetri_serial_job  # Job name
 #SBATCH --mail-type=NONE             # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=vetri.brainscience@gmail.com     # Where to send mail	
-#SBATCH --nodes=16
-#SBATCH --ntasks=16                    # Run on a single CPU
+#SBATCH --nodes=1
+#SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --partition=all
 #SBATCH --time=1:00:00               # Time limit hrs:min:sec
 #SBATCH --output=serial_test_%j.out   # Standard output and error log
@@ -13,6 +13,7 @@ pwd; hostname; date
 
 
 echo "script on a single CPU core"
-
-srun bash MyBatch.sh
+COUNTER=11
+PARAM=1
+./MyBatch.sh $COUNTER $PARAM $SLURM_JOB_ID
 date
