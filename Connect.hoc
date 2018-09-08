@@ -340,8 +340,12 @@ for s =0,  Totals.x(DGg) -1 {
 } // if ConnectMF
 	
 // delay statisitics
-// printf("\nDelays average %g \nMin : %g\n Max: %g\n stdev: %g\n stderr: %g", del.mean(), del.min(),del.max(), del.stdev(), del.stderr())			
+// printf("\nDelays average %g \nMin : %g\n Max: %g\n stdev: %g\n stderr: %g", del.mean(), del.min(),del.max(), del.stdev(), del.stderr())
+
+
+			
 //////////////////// Some data access functions
+//ConRow.append(Connections.nrow-1, $3, $4, $5, $6, $7)
 obfunc GetSynapses () {localobj coll 
 coll = new Vector()
 preA = $1

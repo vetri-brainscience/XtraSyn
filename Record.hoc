@@ -86,3 +86,17 @@ for c = 0, Cells.count() - 1 {
 	SpikeIDs.append(Sidvec)
 	SpikeTimes.append(Stvec)
 }
+
+// Record conductance vs time
+objref Synvec
+Synvec = new Vector()
+//CA3b = 3 , CA3e = 1
+preA = CA3b
+postA = CA3e
+Synvec = GetSynapses (preA, postA)
+printf("**********************************\n")
+printf("Totals.x(preA) = %d\n", Totals.x(preA))
+printf("Totals.x(postA) = %d\n", Totals.x(postA)) 
+printf("preA(CA3b) = %d\t\tpostA(CA3e) = %d\t\t\n", CA3b, CA3e)
+printf("Synvec size = %d\n", Synvec.size())
+printf("**********************************\n")
