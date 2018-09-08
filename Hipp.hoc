@@ -8,7 +8,7 @@ jobid = 333
 strdef codestr
 codestr = "hello"
 lambda = 10
-param = 1    //MyFactor = param
+param = 5    //MyFactor = param
 seed = 9
 //------------------------------------------------------
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
@@ -145,8 +145,17 @@ SynID0=SynIDvec.x[0]
 xxx = Syn.o(SynID0).AlphaTmax_gabaa
 {printf("syn.AlphaTmax_gabaa = %g (uS)\n", xxx)}
 yyy = Syn.o(SynID0).tau1_xtra
-{printf("syn.tau1_xtra= %g (uS)\n", yyy)}
+{printf("syn.tau1_xtra= %g ()\n", yyy)}
+zzz = Syn.o(SynID0).tau2_xtra
+{printf("syn.tau2_xtra= %g ()\n", zzz)}
+gggS = Syn.o(SynID0).gbar_gabaa
+gggX = Syn.o(SynID0).gbar_gabaa_xtra
+{printf("remember gbar_gabaa_xtra = myFactor*(lsyn.gbar_gabaa)\n")}
+{printf("syn.gbar_gabaa= %g (uS)\n", gggS)}
+{printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
+{printf("syn.gbar_gabaa_xtra= %g (uS)\n", gggX)}
 {printf("***************************************************\n")}
+ 
 ////////  Random initialization of cells membrane potential /////////
 proc custominit() {
   for li = 0, Cells.count() -1 {
