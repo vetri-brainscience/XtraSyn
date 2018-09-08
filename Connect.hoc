@@ -82,12 +82,13 @@ lsyn.e_xtra = -74     //mV
 lsyn.gbar_gabaa_xtra = myFactor*(lsyn.gbar_gabaa)
 
 if (preArea == CA3b && postArea == CA3e) {
-  
-  {printf("lsyn.Cdur_gabaa = %g (uS)\n", lsyn.Cdur_gabaa)}
-  {printf("lsyn.AlphaTmax_gabaa = %g (uS)\n", lsyn.AlphaTmax_gabaa)}
-  {printf("myFactor = %0.4f \n", myFactor)} 
-  {printf("lsyn.gbar_gabaa_xtra = %g (uS)\n", lsyn.gbar_gabaa_xtra)} 
-  {printf("lsyn.gbar_gabaa = %g (uS)\n", lsyn.gbar_gabaa)}
+
+//  {printf("lsyn.Cdur_gabaa = %g (uS)\n", lsyn.Cdur_gabaa)}
+//  {printf("lsyn.AlphaTmax_gabaa = %g (uS)\n", lsyn.AlphaTmax_gabaa)}
+//  {printf("myFactor = %0.4f \n", myFactor)} 
+//  {printf("lsyn.gbar_gabaa_xtra = %g (uS)\n", lsyn.gbar_gabaa_xtra)} 
+// {printf("lsyn.gbar_gabaa = %g (uS)\n", lsyn.gbar_gabaa)}
+
 }
 //this gbar_gabaa_xtra = 0.0 (uS) is in the parameter block in synapse_inter2py.mod file
 //********* Note ***************
@@ -210,16 +211,15 @@ par = new Vector()
 synM.getcol(pre2post, par)
 ConPattern = par.x(5)
 //***********************************************************
-printf("EC = 0\CA3e = 1\CA3o = 2\CA3b = 3\DGg = 4\DGh = 5\DGb = 6\n")
+printf("EC = 0\tCA3e = 1\tCA3o = 2\tCA3b = 3\tDGg = 4\tDGh = 5\tDGb = 6\n")
 printf("preArea = %d\n", preArea)
 printf("postArea = %d\n", postArea)
-printf("ConPattern = par.x(5) = %d\n",ConPattern = par.x(5)) 
+printf("ConPattern = %d\n", ConPattern) 
 printf("Lamellar = 0\n")
 printf("Homogenous = 1\n")
 printf("AxonalPlexus = 2\n")
 printf("IntPyrFeedback = 3\n")
 //***********************************************************
-
 	for b =0,  Totals.x(preArea) -1 {
 		for m = 0, Totals.x(postArea) -1 {
 		dx = Locs.o(postArea).x[0][m] - Locs.o(preArea).x[0][b]
@@ -238,12 +238,11 @@ printf("IntPyrFeedback = 3\n")
 			prob =	 par.x(4)/ (exp( ((abs(dx) -0)^2)/ (2 * (3^2))))
 		}
 		if (ConPattern == Homogenous) {
-			prob =	 par.x(4) 				
+         prob =	 par.x(4) 				
 		}
 		if (ConPattern == IntPyrFeedback || ConPattern == AxonalPlexus) {
-			c = par.x(4)
+    	c = par.x(4)
 			a = par.x(29)
-			
 			prob =	 a /(exp( ((abs(distxy) -0)^2)/ (2 * (c^2))))					
 		}
 		
@@ -265,35 +264,41 @@ printf("IntPyrFeedback = 3\n")
 			}
 		}
 	}
+{printf("*********************************************\n")}
+{printf("*********************************************\n")}
+{printf("b = %d\n", Totals.x(preArea))}
+{printf("m = %d\n", Totals.x(postArea))}
+{printf("*********************************************\n")}
+{printf("*********************************************\n")}
 }
 
 ConnectMF = 0
 
 
-ConnectAreas(EC, CA3e, EC2CA3e, Excitatory)
-ConnectAreas(EC, CA3b, EC2CA3b, Excitatory)
+//ConnectAreas(EC, CA3e, EC2CA3e, Excitatory)
+//ConnectAreas(EC, CA3b, EC2CA3b, Excitatory)
 
-ConnectAreas(DGg, CA3b, DGg2CA3b, Excitatory) 
+//ConnectAreas(DGg, CA3b, DGg2CA3b, Excitatory) 
 
-ConnectAreas(CA3e, CA3e, CA3e2CA3e, Excitatory) 
-ConnectAreas(CA3e, CA3b, CA3e2CA3b, Excitatory) 
+//ConnectAreas(CA3e, CA3e, CA3e2CA3e, Excitatory) 
+//ConnectAreas(CA3e, CA3b, CA3e2CA3b, Excitatory) 
 
-ConnectAreas(CA3o, CA3e, CA3o2CA3e, Inhibitory)
+//ConnectAreas(CA3o, CA3e, CA3o2CA3e, Inhibitory)
 ConnectAreas(CA3b, CA3e, CA3b2CA3e, Inhibitory)
 
-ConnectAreas(CA3b, CA3o, CA3b2CA3o, Inhibitory)
+//ConnectAreas(CA3b, CA3o, CA3b2CA3o, Inhibitory)
 
-ConnectMF = 1
+//ConnectMF = 1
 
-ConnectAreas(EC, DGg, EC2DGg, Excitatory)
-ConnectAreas(EC, DGb, EC2DGb, Excitatory)
+//ConnectAreas(EC, DGg, EC2DGg, Excitatory)
+//ConnectAreas(EC, DGb, EC2DGb, Excitatory)
 
-ConnectAreas(DGg, DGb, DGg2DGb, Excitatory)
+//ConnectAreas(DGg, DGb, DGg2DGb, Excitatory)
 
-ConnectAreas(DGh, DGg, DGh2DGg, Inhibitory)
-ConnectAreas(DGb, DGg, DGb2DGg, Inhibitory)
+//ConnectAreas(DGh, DGg, DGh2DGg, Inhibitory)
+//ConnectAreas(DGb, DGg, DGb2DGg, Inhibitory)
 
-ConnectAreas(DGb, DGh, DGb2DGh, Inhibitory)
+//ConnectAreas(DGb, DGh, DGb2DGh, Inhibitory)
 
 // Lamellar. 
 	//prob = prob =	 par.x(4) /(1+(1-exp(-abs(dx)^2/3)))	
@@ -367,7 +372,7 @@ coll = new Vector()
 preA = $1
 postA = $2
 	for y =0, Connections.nrow -1 {
-		if ( (Connections.x(y, 1) == preA) && (Connections.x(y,3) == postA)) {
+		if ( (Connections.x(y, 1) == preA) && (Connections.x(y,3) == postA) && (Connections.x(y,5) == Inhibitory)) {
 			coll.append(Connections.x(y,0))
 		}
 	}
@@ -398,9 +403,3 @@ preArea = $3
 	}
 return (coll)
 }
-{printf("*********************************************\n")}
-{printf("*********************************************\n")}
-{printf("b = %d\n", b)}
-{printf("m = %d\n", m)}
-{printf("*********************************************\n")}
-{printf("*********************************************\n")}

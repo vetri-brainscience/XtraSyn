@@ -59,6 +59,23 @@ for ii = 0, Volts.count() -1 {  //Beca
 
 }
 
+///////////////// Write Conductance vs time ////////////////////////////////
+///////////////// Added this on 8thSept2018
+objref Gfile
+strdef gfileName
+    sprint(gfileName, "%s%s%s", outPath, IDstring,  "GvsTime.txt")
+		Gfile= new File(gfileName)
+		printf(gfileName)
+		Gfile.wopen()
+    for i=0,tgvec.size()-1 {
+   	{Gfile.printf("%g\t%g\n",tgvec.x(i), gvec.x(i)) }
+      {printf("%g\t%g\n",tgvec.x(i), gvec.x(i))} 
+    }
+		Gfile.close()
+   {printf("tgvec.size = %d\n", tgvec.size())}
+   {printf("gvec.size = %d\n", gvec.size())}
+/////////////////////////////////////////////////////////
+
 /////////////////   Write Spike Times
 objref Sfile
 strdef sfileName
