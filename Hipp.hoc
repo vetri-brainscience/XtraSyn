@@ -3,11 +3,18 @@ load_file("Template.hoc")
 //load_file("nrngui.hoc")
 load_file("stdrun.hoc")
 load_file("ReadExperiments.hoc")
-
+//---------- when Hipp.hoc is run directly---------------
+jobid = 333
+strdef codestr
+codestr = "hello"
+lambda = 10
+param = 1    //MyFactor = param
+seed = 9
+//------------------------------------------------------
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
-lambda = 10    //changed on 10thJuly2018
+//lambda = 10    //changed on 10thJuly2018
 myFactor = param
-tstop = 1000
+tstop = 300
 {printf("--------------------------------------------------")}
 {printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
 {printf("---------------------- tstop = %d ---------------!\n", tstop)}
@@ -36,8 +43,8 @@ expSig = "full"
 //seed = fscan()
 
 
-//{printf("---------------------- Seed = %d ---------------!\n", seed)}
-{printf("from Hipp.hoc : ------seed is = %d ---------param (lambda) = %d (Hz)\nsm = %g (ms)\tcodestr = %s\n", seed, lambda, (1/lambda)*1000, codestr)}
+{printf("---------------------- Seed = %d ---------------!\n", seed)}
+//{printf("from Hipp.hoc : ------seed is = %d ---------param (lambda) = %d (Hz)\nsm = %g (ms)\tcodestr = %s\n", seed, lambda, (1/lambda)*1000, codestr)}
 //seed is comming from the MyHipp.hoc!!
 //codestr is also coming from the MyHipp.hoc !!
 //codestr is a string added to the output filenames!!
@@ -125,6 +132,21 @@ for i = 0, DGbTotal -1 {
 ///////// Connections ///////////////////
 load_file("Connect.hoc")
 
+objref SynIDvec
+SynIDvec = new Vector()
+SynIDvec = GetSynapses (CA3b, CA3e)
+{printf("***************************************************\n")}
+{printf("Size of SynIDvec = %d\n", SynIDvec.size())}
+{printf("SynIDvec.x[0] = %d\n", SynIDvec.x[0])}
+{printf("SynIDvec.x[%d] = %d\n", SynIDvec.size()-1, SynIDvec.x[SynIDvec.size()-1])}
+SynID0=SynIDvec.x[0]
+{printf("SynID0 = %d\n", SynID0)} 
+{printf("Size of Syn list = %d\n", Syn.count())}
+xxx = Syn.o(SynID0).AlphaTmax_gabaa
+{printf("syn.AlphaTmax_gabaa = %g (uS)\n", xxx)}
+yyy = Syn.o(SynID0).tau1_xtra
+{printf("syn.tau1_xtra= %g (uS)\n", yyy)}
+{printf("***************************************************\n")}
 ////////  Random initialization of cells membrane potential /////////
 proc custominit() {
   for li = 0, Cells.count() -1 {

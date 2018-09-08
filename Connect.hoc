@@ -80,9 +80,15 @@ lsyn.tau1_xtra = 7   //ms
 lsyn.tau2_xtra = 200  //ms
 lsyn.e_xtra = -74     //mV
 lsyn.gbar_gabaa_xtra = myFactor*(lsyn.gbar_gabaa)
-printf("myFactor = %0.4f \n", myFactor) 
-printf("lsyn.gbar_gabaa_xtra = %g (uS)\n", lsyn.gbar_gabaa_xtra) 
-printf("lsyn.gbar_gabaa = %g (uS)\n", lsyn.gbar_gabaa)
+
+if (preArea == CA3b && postArea == CA3e) {
+  
+  {printf("lsyn.Cdur_gabaa = %g (uS)\n", lsyn.Cdur_gabaa)}
+  {printf("lsyn.AlphaTmax_gabaa = %g (uS)\n", lsyn.AlphaTmax_gabaa)}
+  {printf("myFactor = %0.4f \n", myFactor)} 
+  {printf("lsyn.gbar_gabaa_xtra = %g (uS)\n", lsyn.gbar_gabaa_xtra)} 
+  {printf("lsyn.gbar_gabaa = %g (uS)\n", lsyn.gbar_gabaa)}
+}
 //this gbar_gabaa_xtra = 0.0 (uS) is in the parameter block in synapse_inter2py.mod file
 //********* Note ***************
 // These xtra syaptic receptor parameters are from the following
@@ -203,6 +209,16 @@ type = $4
 par = new Vector()
 synM.getcol(pre2post, par)
 ConPattern = par.x(5)
+//***********************************************************
+printf("EC = 0\CA3e = 1\CA3o = 2\CA3b = 3\DGg = 4\DGh = 5\DGb = 6\n")
+printf("preArea = %d\n", preArea)
+printf("postArea = %d\n", postArea)
+printf("ConPattern = par.x(5) = %d\n",ConPattern = par.x(5)) 
+printf("Lamellar = 0\n")
+printf("Homogenous = 1\n")
+printf("AxonalPlexus = 2\n")
+printf("IntPyrFeedback = 3\n")
+//***********************************************************
 
 	for b =0,  Totals.x(preArea) -1 {
 		for m = 0, Totals.x(postArea) -1 {
@@ -382,6 +398,9 @@ preArea = $3
 	}
 return (coll)
 }
-
-
-
+{printf("*********************************************\n")}
+{printf("*********************************************\n")}
+{printf("b = %d\n", b)}
+{printf("m = %d\n", m)}
+{printf("*********************************************\n")}
+{printf("*********************************************\n")}
