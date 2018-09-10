@@ -76,8 +76,8 @@ lsyn.gbar_gabab = par.x(28)
 lsyn.Erev_gabab = par.x(16)
 
 //Added by vetri  
-lsyn.tau1_xtra = 7   //ms     
-lsyn.tau2_xtra = 200  //ms
+lsyn.tau1_xtra = 2.0   //ms     
+lsyn.tau2_xtra = 10.0  //ms
 lsyn.e_xtra = -74     //mV
 lsyn.gbar_gabaa_xtra = myFactor*(lsyn.gbar_gabaa)
 
@@ -275,30 +275,30 @@ printf("IntPyrFeedback = 3\n")
 ConnectMF = 0
 
 
-//ConnectAreas(EC, CA3e, EC2CA3e, Excitatory)
-//ConnectAreas(EC, CA3b, EC2CA3b, Excitatory)
+ConnectAreas(EC, CA3e, EC2CA3e, Excitatory)
+ConnectAreas(EC, CA3b, EC2CA3b, Excitatory)
 
-//ConnectAreas(DGg, CA3b, DGg2CA3b, Excitatory) 
+ConnectAreas(DGg, CA3b, DGg2CA3b, Excitatory) 
 
-//ConnectAreas(CA3e, CA3e, CA3e2CA3e, Excitatory) 
-//ConnectAreas(CA3e, CA3b, CA3e2CA3b, Excitatory) 
+ConnectAreas(CA3e, CA3e, CA3e2CA3e, Excitatory) 
+ConnectAreas(CA3e, CA3b, CA3e2CA3b, Excitatory) 
 
-//ConnectAreas(CA3o, CA3e, CA3o2CA3e, Inhibitory)
+ConnectAreas(CA3o, CA3e, CA3o2CA3e, Inhibitory)
 ConnectAreas(CA3b, CA3e, CA3b2CA3e, Inhibitory)
 
-//ConnectAreas(CA3b, CA3o, CA3b2CA3o, Inhibitory)
+ConnectAreas(CA3b, CA3o, CA3b2CA3o, Inhibitory)
+//
+ConnectMF = 1
 
-//ConnectMF = 1
+ConnectAreas(EC, DGg, EC2DGg, Excitatory)
+ConnectAreas(EC, DGb, EC2DGb, Excitatory)
 
-//ConnectAreas(EC, DGg, EC2DGg, Excitatory)
-//ConnectAreas(EC, DGb, EC2DGb, Excitatory)
+ConnectAreas(DGg, DGb, DGg2DGb, Excitatory)
 
-//ConnectAreas(DGg, DGb, DGg2DGb, Excitatory)
+ConnectAreas(DGh, DGg, DGh2DGg, Inhibitory)
+ConnectAreas(DGb, DGg, DGb2DGg, Inhibitory)
 
-//ConnectAreas(DGh, DGg, DGh2DGg, Inhibitory)
-//ConnectAreas(DGb, DGg, DGb2DGg, Inhibitory)
-
-//ConnectAreas(DGb, DGh, DGb2DGh, Inhibitory)
+ConnectAreas(DGb, DGh, DGb2DGh, Inhibitory)
 
 // Lamellar. 
 	//prob = prob =	 par.x(4) /(1+(1-exp(-abs(dx)^2/3)))	
@@ -372,7 +372,7 @@ coll = new Vector()
 preA = $1
 postA = $2
 	for y =0, Connections.nrow -1 {
-		if ( (Connections.x(y, 1) == preA) && (Connections.x(y,3) == postA) && (Connections.x(y,5) == Inhibitory)) {
+		if ( (Connections.x(y, 1) == preA) && (Connections.x(y,3) == postA) && (Connections.x(y,5) == Inhibitory) && (Connections.x(y,4) == preA)) {
 			coll.append(Connections.x(y,0))
 		}
 	}
@@ -398,7 +398,7 @@ postNum = $2
 preArea = $3
 	for y =0, Connections.nrow -1 {
 		if ( (Connections.x(y, 3) == postArea) && (Connections.x(y,4) == postNum) && (Connections.x(y, 5) == preArea) ) {
-			coll.append(Connections.x(y,0))
+			  coll.append(Connections.x(y,0))
 		}
 	}
 return (coll)

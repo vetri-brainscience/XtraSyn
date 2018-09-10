@@ -433,8 +433,8 @@ static void nrn_alloc(Prop* _prop) {
  	wDA = 0;
  	tau1_xtra = 0.1;
  	tau2_xtra = 10;
- 	e_xtra = 0;
- 	gbar_gabaa_xtra = 0;
+ 	e_xtra = -75;
+ 	gbar_gabaa_xtra = 0.0017;
   }
  	_prop->param = _p;
  	_prop->param_size = 88;
@@ -476,7 +476,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 inter2pyr /common/home/lakshmanan_v/XtraSyn_140818/x86_64/synapse_inter2pyr.mod\n");
+ 	ivoc_help("help ?1 inter2pyr /common/home/lakshmanan_v/XtraSyn/x86_64/synapse_inter2pyr.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }

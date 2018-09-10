@@ -87,23 +87,106 @@ for c = 0, Cells.count() - 1 {
 	SpikeTimes.append(Stvec)
 }
 
+
+
+//---------------------------------------------------------------
+/*
+		/////// Recording All xtraSyn cond and curr vs time//////////////
+// recording cond and curr vs time
+objref GCond,  GXCond, ggvec, ggxvec, tvvec, CellsToRec
+GCond = new List()
+GXCond = new List()
+CellsToRec = new Vector()
+CellsToRec.indgen(0,61,1)
+
+	tvvec = new Vector()
+	tvvec.record(&t)
+	//Volts.append(tvvec)
+	
+for y = 0, CellsToRec.size() -1 {
+	ggvec = new Vector()
+  ggxvec = new Vector()	
+	vvec.record(&Cells.o(1).o( CellsToRec.x(y) ).soma.v(0.5))
+
+	Volts.append(vvec)
+}
+*/
+//---------------------------------------------------------------------
+//This code was added on 10thSpet2018
+//This code gives the IDs or cell numbers which on which inhib synapses are set
+//use this to record conductance etc.
+//---------------------------------------------------------------------
+objref synPreIDvec, synPosIDvec, synIDvec
+synPreIDvec = new Vector()
+synPosIDvec = new Vector()
+synIDvec = new Vector()
+j=-1
+{printf("--------------------------------\n")}
+{printf("j..start = %d\n", j+1)}
+for s = 0, Syn.count() -1 {
+		if ((Connections.x(s,5) == Inhibitory) && (Connections.x(s, 1) == CA3b) && (Connections.x(s, 3) == CA3e)&& ((Connections.x(s, 4) == 0) || (Connections.x(s, 4) == 1))) {
+						j=j+1
+            //{printf("b = %d\t m = %d\t%d\n", Connections.x(s, 2), Connections.x(s, 4), Connections.x(s, 0))}
+            synPreIDvec.append(Connections.x(s, 2))
+            synPosIDvec.append(Connections.x(s, 4))
+            synIDvec.append(Connections.x(s, 0))  
+            {printf("b* = %d\t m* = %d\t%d\n", synPreIDvec.x[j], synPosIDvec.x[j], synIDvec.x[j])}
+			} else {
+				  j=j
+			}
+		}		
+{printf("j..stop = %d\n", j)}
+{printf("--------------------------------\n")}
+{printf("synPreIDvec.size() = %d\n", synPreIDvec.size())}
+{printf("synPosIDvec.size() = %d\n", synPosIDvec.size())}
+{printf("synIDvec.size() = %d\n", synIDvec.size())}
+{printf("------------CA3b = %d -----------------\n", CA3b)}
+{printf("------------CA3e = %d -----------------\n", CA3e)}
+
+
+///////////////// Record Conductance as well as Current vs time ////////////////////////////////
+//Synaptic as well as xtra synaptic
+///////////////// Added this on 9thSept2018 from NB //////////////////////////////////////////
 // Record conductance vs time
-  objref gvec, tgvec
-  tgvec = new Vector()
-  tgvec.record(&t)
-  gvec = new Vector()
-  gvec.record(&Syn.o(SynID0).i_xtra)
-  
-objref Synvec
-Synvec = new Vector()
-//CA3b = 3 , CA3e = 1
-preA = CA3b
-postA = CA3e
-Synvec = GetSynapses (preA, postA)
-printf("**********************************\n")
-printf("Totals.x(preA) = %d\n", Totals.x(preA))
-printf("Totals.x(postA) = %d\n", Totals.x(postA)) 
-printf("preA(CA3b) = %d\t\tpostA(CA3e) = %d\t\t\n", CA3b, CA3e)
-printf("Synvec size = %d\n", Synvec.size())
-printf("**********************************\n")
+//Record current vs time
+
+objref ginhvec, gxinhvec, cinhvec, cxinhvec, twvec1, Ginh, Cinh, GXinh, CXinh	
+objref synIDvec
+Ginh = new List()
+Cinh = new List()
+GXinh = new List()
+CXinh = new List()
+
+tgvec = new Vector()
+tgvec.record(&t)
+
+ginhvec = new Vector()
+cinhvec = new Vector()
+gxinhvec = new Vector()
+cxinhvec = new Vector()
+
+j=0
+printf("--------------------------------\n"
+printf("j..start = %d\n", j)
+for s = 0, (synIDvec.count()-1) {
+        ginhvec = new Vector()
+        cinhvec = new Vector()
+        gxinhvec = new Vector()
+        cxinhvec = new Vector()
+				
+        tmp = synIDvec.x[s]
+				cinhvec.record(&Syn.o(tmp).i_gabaa)
+				ginhvec.record(&Syn.o(tmp).g_gabaa)
+				cxinhvec.record(&Syn.o(tmp).i_xtra)
+				gxinhvec.record(&Syn.o(tmp).g_xtra)
+
+        Ginh.append(ginhvec)
+        Cinh.append(cinhvec)
+        GXinh.append(gxinhvec)
+        CXinh.append(cxinhvec)
+} 
+				
+printf("j..stop = %d\n", j)
+printf("--------------------------------\n"
+
 

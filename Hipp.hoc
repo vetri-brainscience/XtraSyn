@@ -1,4 +1,3 @@
-
 load_file("Template.hoc")
 //load_file("nrngui.hoc")
 load_file("stdrun.hoc")
@@ -8,8 +7,8 @@ jobid = 333
 strdef codestr
 codestr = "hello"
 lambda = 10
-param = 5    //MyFactor = param
-seed = 9
+param = 1    //MyFactor = param
+seed = 5
 //------------------------------------------------------
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
 //lambda = 10    //changed on 10thJuly2018
@@ -71,7 +70,7 @@ DGhTotal = 32
 DGinhTotal = 96
 
 showNeurons = 0
-	ShowArea = 1  // 1 for CA3 and 2 for DG
+ShowArea = 1  // 1 for CA3 and 2 for DG
 diagnostics = 0
 
 wACH = .05 //.1
@@ -140,8 +139,10 @@ SynIDvec = GetSynapses (CA3b, CA3e)
 {printf("SynIDvec.x[0] = %d\n", SynIDvec.x[0])}
 {printf("SynIDvec.x[%d] = %d\n", SynIDvec.size()-1, SynIDvec.x[SynIDvec.size()-1])}
 SynID0=SynIDvec.x[0]
+
 {printf("SynID0 = %d\n", SynID0)} 
 {printf("Size of Syn list = %d\n", Syn.count())}
+{printf("Dimensions of Connections Matrix(nrow X ncol) = %d\t%d\n", Connections.nrow, Connections.ncol)}
 xxx = Syn.o(SynID0).AlphaTmax_gabaa
 {printf("syn.AlphaTmax_gabaa = %g (uS)\n", xxx)}
 yyy = Syn.o(SynID0).tau1_xtra

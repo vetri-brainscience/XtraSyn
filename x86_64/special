@@ -10,4 +10,4 @@ if test "" = "yes" ; then
 else
 	NRNIV="${NRNBIN}nrniv"
 fi
-"${NRNIV}" -dll "/home/lakshmanan_v/XtraSyn_140818/x86_64/.libs/libnrnmech.so" "$@"
+"${NRNIV}" -dll "/home/lakshmanan_v/XtraSyn/x86_64/.libs/libnrnmech.so" "$@"

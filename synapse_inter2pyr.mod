@@ -120,8 +120,8 @@ LearningShutDown = 1
   
 	tau1_xtra = 0.1 (ms) <1e-9,1e9>
 	tau2_xtra = 10 (ms) <1e-9,1e9>
-	e_xtra=0	(mV)	
-  gbar_gabaa_xtra = 0.0(uS)   
+	e_xtra=-75	(mV)	
+  gbar_gabaa_xtra = 1.7e-3 (uS)   
   :13thJuly2018 remeber to recompile mod files!! vetri
 }
 
@@ -289,7 +289,8 @@ DERIVATIVE release {
 }
 
 :dummy_weight changed to weight (uS) below -vetri
-NET_RECEIVE(weight (uS)) {
+NET_RECEIVE(dummy_weight) {
+  :printf("dummy_weightInh = %g\n", dummy_weight)
 	:Added by Ali, Synaptic facilitation
 	F  = 1 + (F-1)* exp(-(t - tsyn)/tauF)
 	D1 = 1 - (1-D1)*exp(-(t - tsyn)/tauD1)
@@ -306,8 +307,8 @@ NET_RECEIVE(weight (uS)) {
 
 	t0 = t :Spike time for conductance openining.
 :Added by vetri
-	A = A + weight*factor_xtra
-	B = B + weight*factor_xtra	
+	A = A + dummy_weight*factor_xtra
+	B = B + dummy_weight*factor_xtra	
 }
 
 :::::::::::: FUNCTIONs and PROCEDUREs ::::::::::::

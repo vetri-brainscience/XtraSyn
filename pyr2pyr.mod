@@ -214,6 +214,7 @@ DERIVATIVE release {
 }
 
 NET_RECEIVE(dummy_weight) {
+  :printf("dummy_weightPyr = %g\n", dummy_weight)
 	t0 = t :spike time for conductance opening
 	
 	:Added by Ali, Synaptic facilitation

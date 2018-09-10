@@ -59,22 +59,66 @@ for ii = 0, Volts.count() -1 {  //Beca
 
 }
 
-///////////////// Write Conductance vs time ////////////////////////////////
-///////////////// Added this on 8thSept2018
-objref Gfile
+///////////////// Write Conductance as well as Current vs time ////////////////////////////////
+//Synaptic as well as xtra synaptic
+///////////////// Added this on 9thSept2018 from NB //////////////////////////////////////////
+///////////////// modified this on 10thSept2018 from lab //////////////////////////////////////////
+objref Gfile, Cfile,
 strdef gfileName
+strdef cfilename
     sprint(gfileName, "%s%s%s", outPath, IDstring,  "GvsTime.txt")
+    sprint(cfileName, "%s%s%s", outPath, IDstring,  "CvsTime.txt")
 		Gfile= new File(gfileName)
-		printf(gfileName)
+    Cfile= new File(cfileName)
+		{printf(gfileName)}
+    {printf(cfileName)}
 		Gfile.wopen()
-    for i=0,tgvec.size()-1 {
-   	{Gfile.printf("%g\t%g\n",tgvec.x(i), gvec.x(i)) }
-      {printf("%g\t%g\n",tgvec.x(i), gvec.x(i))} 
+    Cfile.wopen()
+    for j = 0, Gfile.o(0).size() -1 {
+		    Gfile.printf("\n")
+		    Gfile.printf("%g ", tgvec.x(j))
+        Cfile.printf("\n")
+		    Cfile.printf("%g ", tgvec.x(j))
+		
+		  for k = 0, Gfile.count() -1 {
+			  Gfile.printf("%g ", Ginh.o(k).x(j))
+        Cfile.printf("%g ", Cinh.o(k).x(j))                           
+		    }
+	    }
     }
 		Gfile.close()
-   {printf("tgvec.size = %d\n", tgvec.size())}
-   {printf("gvec.size = %d\n", gvec.size())}
+    Cfile.close()
 /////////////////////////////////////////////////////////
+
+
+objref GXfile, CXfile,
+strdef gxfileName
+strdef cxfilename
+    sprint(gxfileName, "%s%s%s", outPath, IDstring,  "GXvsTime.txt")
+    sprint(cxfileName, "%s%s%s", outPath, IDstring,  "CXvsTime.txt")
+		Gfile= new File(gfileName)
+    CXfile= new File(gfileName)
+		{printf(gxfileName)}
+    {printf(cxfileName)}
+		GXfile.wopen()
+    CXfile.wopen()
+    for j = 0, GXfile.o(0).size() -1 {
+		    GXfile.printf("\n")
+		    GXfile.printf("%g ", tgvec.x(j))
+        CXfile.printf("\n")
+		    CXfile.printf("%g ", tgvec.x(j))
+		
+		  for k = 0, GXfile.count() -1 {
+			  GXfile.printf("%g ", GXinh.o(k).x(j))
+        CXfile.printf("%g ", CXinh.o(k).x(j))                           
+		    }
+	    }
+    }
+		GXfile.close()
+    CXfile.close()
+/////////////////////////////////////////////////////////
+
+
 
 /////////////////   Write Spike Times
 objref Sfile
@@ -221,10 +265,29 @@ proc DrawSpikes() {localobj grra
 
 // outFile.printf("%g, %g, %g, %g, %g, %g", ExpNo, Var1, Var2, Var3, Var4, Var5)
 
-// So in Experiments.txt I have all the exp with their number snad the var values. So really all I need is the cells spike times so that all that data can be analyzed using matlab. Graphs can be made and also scoring. But matlab will also need:
+// So in Experiments.txt I have all the exp with their number snad the var values. 
+//So really all I need is the cells spike times so that all that data can be analyzed using matlab. Graphs can
+// be made and also scoring. But matlab will also need:
+
 /*
 - Number of trials
 - Duration of CS
 - Duration of Trial
 - 
 */
+
+
+//---------------------------------------------------------------------
+//This code was added on 10thSpet2018
+//This code gives the IDs or cell numbers which on which inhib synapses are set
+//use this to record conductance etc.
+//---------------------------------------------------------------------
+objref synIDFile
+strdef synIDFilename
+sprint (synIDFilename, "%s%s%s", outPath, IDstring,"synIDs.txt")
+synIDFile = new File(synIDFilename)
+synIDFile.wopen()
+for i=0,synPosIDvec.size()-1 {
+    synIDFile.printf("%d\t%d\t%d\n",synIDvec.x[i], synPreIDvec.x[i], synPosIDvec.x[i]) 
+  }
+synIDFile.close()
