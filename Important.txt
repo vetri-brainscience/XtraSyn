@@ -1,0 +1,124 @@
+/////////////////////////////////////////////
+objref synF, synM
+synF = new File()
+synF.ropen("./Inputs/Synapses.txt")
+synM= new Matrix()
+synM.scanf(synF, 30, 26)
+synF.close()
+//synM.printf()
+//SynM is a Matrix with 30 rows and 26 Cols
+////////////////////////////////////////////
+
+
+inpTotal = 30 // EC
+excTotal = 63 // CA3 principal
+CA3oTotal = 8
+CA3bTotal  = 8
+DGexcTotal = 384 
+DGbTotal = 32
+DGhTotal = 32
+DGinhTotal = 96
+
+objref Cells, Locs, Totals
+Totals = new Vector()  //Totals = [30, 63, 8, 8, 384, 32, 32, 96]
+Totals.append(inpTotal = 30)
+Totals.append(excTotal = 63)
+Totals.append(CA3oTotal = 8)
+Totals.append(CA3bTotal = 8)
+Totals.append(DGexcTotal = 384)
+Totals.append(DGhTotal = 32)
+Totals.append(DGbTotal = 32)
+
+Totals = new Vector()
+Totals.append(inpTotal)
+Totals.append(excTotal)
+Totals.append(CA3oTotal)
+Totals.append(CA3bTotal)
+Totals.append(DGexcTotal)
+Totals.append(DGhTotal)
+Totals.append(DGbTotal)
+
+/*
+ConnectAreas(CA3b, CA3e, CA3b2CA3e, Inhibitory)
+*/
+proc ConnectAreas() { 
+		preArea = $1
+		postArea = $2
+		pre2post = $3
+		type = $4
+		
+		par = new Vector()
+		synM.getcol(pre2post, par)
+
+		for b =0,  Totals.x(preArea) -1 {
+			for m = 0, Totals.x(postArea) -1 {
+				/*
+				ConectAreas calls ConnectNeurons
+				*/
+				ConnectNeurons( $1 = preArea,
+						$2 = b,
+						$3 = postArea, 
+						$4 = m, 
+		
+						$5 = Cells.o(preArea).o(b), 
+						$6 = Cells.o(postArea).o(m), 
+		
+						$7 = type, 
+						$8 = synM.getcol(pre2post), 
+						$9 = distDelay)	
+			}
+		}
+
+/*
+ConnectNeurons finally calls AddtoGlobal()
+*/
+proc ConnectNeurons() {
+		preArea = $1
+		preId = $2
+		postArea = $3
+		postId = $4
+
+		source = $o5
+		target = $o6
+			
+		SynapseType = $7
+		par = $o8
+		delayDistance = $9
+
+/*
+
+local obj lsyn (Synapse) , lcon (is a NetCon onject)
+access source.soma
+target.soma lsyn = new pyr2pyr(0.9) if SynapseType == 1 (excitatory)
+target.soma lsyn = new inter2pyr(0.9) if SynapseType == 0 (inhibitory)
+lcon = new NetCon(&v(0.5), lsyn, 0, delay, 1)
+
+
+AddtoGlobal(lsyn, lcon, preArea, preId, postArea, postId, SynapseType)
+*/
+AddtoGlobal(    $1 = lsyn, 
+		$2 = lcon, 
+
+		$3 = preArea, 
+		$4 = preId, 
+		$5 = postArea, 
+		$6 = postId,
+ 
+		$7 = SynapseType)
+
+
+objref Syn, Con, Connections, ConRow
+Syn = new List()
+Con = new List()
+Connections = new Matrix(1,6)
+
+proc AddtoGlobal () { localobj ConRow
+		Syn.append($o1)
+		Con.append($o2)
+		
+		
+		ConRow = new Vector()
+		ConRow.append(Connections.nrow-1, $3, $4, $5, $6, $7) 
+		Connections.setrow(Connections.nrow-1, ConRow) 
+		Connections.resize(Connections.nrow + 1, Connections.ncol)
+}

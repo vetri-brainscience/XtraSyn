@@ -1,0 +1,109 @@
+		/////// Recording variables//////////////
+// recording membrane voltage
+objref Volts, vvec, tvvec, CellsToRec
+Volts = new List()
+CellsToRec = new Vector()
+CellsToRec.indgen(0,61,1)
+
+	tvvec = new Vector()
+	tvvec.record(&t)
+	//Volts.append(tvvec)
+	
+for y = 0, CellsToRec.size() -1 {
+	vvec = new Vector()
+	
+	vvec.record(&Cells.o(1).o( CellsToRec.x(y) ).soma.v(0.5))
+
+	Volts.append(vvec)
+}
+
+
+// Recording weights
+objref Weights, WeightTimes, wvec, twvec
+Weights = new List()
+WeightTimes = new List()
+twvec = new Vector()
+
+twvec.record(&t, 40)
+
+for s = 0, Syn.count() -1 {
+	wvec = new Vector()
+
+	if (Connections.x(s, 5) == 1 || Connections.x(s, 5) == 3) {
+		wvec.record(&Syn.o(s).W_ampa, 40)//, twvec,1)
+		} else {
+			if (Connections.x(s,5) == 0 || Connections.x(s, 5) == 2) {
+				wvec.record(&Syn.o(s).W_gabaa, 40)///, wvec, twvec,1)
+			} else {
+			printf("\n ----------- Problem finding connection to record\n")
+			}
+		}		
+Weights.append(wvec)
+} // for s
+
+// Recording Currents
+objref Currents, rectvec, cvec, twvec1
+twvec1 = new Vector()
+Currents = new List()
+rectvec = new Vector()
+
+// for (i = StimSpace * 5; i <= StimSpace * 6; i+=5) {
+	// rectvec.append(i)
+// }
+		rectvec.indgen(0, tstop, tstop/130 )
+		twvec1 = rectvec 
+for s = 0, Syn.count() -1 {
+	cvec = new Vector()
+
+	if (Connections.x(s, 5) == 1 || Connections.x(s, 5) == 3) {
+	// cvec.record(&Syn.o(s).D1, twvec1,1)
+		cvec.record(&Syn.o(s).i_ampa, twvec1,1)
+		// cvec.record(&Syn.o(s).Capoolcon, 40)//, twvec,1)
+		} else {
+			if (Connections.x(s,5) == 0 || Connections.x(s, 5) == 2) {
+				cvec.record(&Syn.o(s).i_gabaa, twvec1,1)
+				// cvec.record(&Syn.o(s).Capoolcon, 40)///, wvec, twvec,1)
+			} else {
+			printf("\n ----------- Problem finding connection to record\n")
+			}
+		}		
+Currents.append(cvec)
+} // for s
+
+// Recording Spike times
+objref SpikeIDs, SpikeTimes, Sidvec, Stvec, nc_, nil
+SpikeIDs = new List()
+SpikeTimes = new List()
+
+for c = 0, Cells.count() - 1 {
+	Sidvec = new Vector()
+	Stvec = new Vector()
+	for ii = 0, Cells.o(c).count() - 1 {
+		Cells.o(c).o(ii).soma nc_ = new NetCon(&v(0.5), nil)
+		nc_.threshold = -20
+		nc_.record(Stvec, Sidvec, ii)
+	}
+	SpikeIDs.append(Sidvec)
+	SpikeTimes.append(Stvec)
+}
+
+// Record conductance vs time
+  objref gvec, tgvec
+  tgvec = new Vector()
+  tgvec.record(&t)
+  gvec = new Vector()
+  gvec.record(&Syn.o(SynID0).i_xtra)
+  
+objref Synvec
+Synvec = new Vector()
+//CA3b = 3 , CA3e = 1
+preA = CA3b
+postA = CA3e
+Synvec = GetSynapses (preA, postA)
+printf("**********************************\n")
+printf("Totals.x(preA) = %d\n", Totals.x(preA))
+printf("Totals.x(postA) = %d\n", Totals.x(postA)) 
+printf("preA(CA3b) = %d\t\tpostA(CA3e) = %d\t\t\n", CA3b, CA3e)
+printf("Synvec size = %d\n", Synvec.size())
+printf("**********************************\n")
+
