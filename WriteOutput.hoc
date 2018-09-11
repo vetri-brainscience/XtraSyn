@@ -33,7 +33,8 @@ if (Experiment ==4) {
 	}
 writeWeights = 0
 writeVolts = 1
-/////////////////   Write Volts
+////////////////////////////////////////////////////////////////////
+/////////////////   Write Volts   /////////////////////////////////
 objref vfile
 strdef vfileName
 
@@ -58,67 +59,7 @@ for ii = 0, Volts.count() -1 {  //Beca
 		vfile.close()
 
 }
-
-///////////////// Write Conductance as well as Current vs time ////////////////////////////////
-//Synaptic as well as xtra synaptic
-///////////////// Added this on 9thSept2018 from NB //////////////////////////////////////////
-///////////////// modified this on 10thSept2018 from lab //////////////////////////////////////////
-objref Gfile, Cfile,
-strdef gfileName
-strdef cfilename
-    sprint(gfileName, "%s%s%s", outPath, IDstring,  "GvsTime.txt")
-    sprint(cfileName, "%s%s%s", outPath, IDstring,  "CvsTime.txt")
-		Gfile= new File(gfileName)
-    Cfile= new File(cfileName)
-		{printf(gfileName)}
-    {printf(cfileName)}
-		Gfile.wopen()
-    Cfile.wopen()
-    for j = 0, Gfile.o(0).size() -1 {
-		    Gfile.printf("\n")
-		    Gfile.printf("%g ", tgvec.x(j))
-        Cfile.printf("\n")
-		    Cfile.printf("%g ", tgvec.x(j))
-		
-		  for k = 0, Gfile.count() -1 {
-			  Gfile.printf("%g ", Ginh.o(k).x(j))
-        Cfile.printf("%g ", Cinh.o(k).x(j))                           
-		    }
-	    }
-    }
-		Gfile.close()
-    Cfile.close()
-/////////////////////////////////////////////////////////
-
-
-objref GXfile, CXfile,
-strdef gxfileName
-strdef cxfilename
-    sprint(gxfileName, "%s%s%s", outPath, IDstring,  "GXvsTime.txt")
-    sprint(cxfileName, "%s%s%s", outPath, IDstring,  "CXvsTime.txt")
-		Gfile= new File(gfileName)
-    CXfile= new File(gfileName)
-		{printf(gxfileName)}
-    {printf(cxfileName)}
-		GXfile.wopen()
-    CXfile.wopen()
-    for j = 0, GXfile.o(0).size() -1 {
-		    GXfile.printf("\n")
-		    GXfile.printf("%g ", tgvec.x(j))
-        CXfile.printf("\n")
-		    CXfile.printf("%g ", tgvec.x(j))
-		
-		  for k = 0, GXfile.count() -1 {
-			  GXfile.printf("%g ", GXinh.o(k).x(j))
-        CXfile.printf("%g ", CXinh.o(k).x(j))                           
-		    }
-	    }
-    }
-		GXfile.close()
-    CXfile.close()
-/////////////////////////////////////////////////////////
-
-
+////////////////////////////////////////////////////////////////////
 
 /////////////////   Write Spike Times
 objref Sfile
@@ -282,12 +223,91 @@ proc DrawSpikes() {localobj grra
 //This code gives the IDs or cell numbers which on which inhib synapses are set
 //use this to record conductance etc.
 //---------------------------------------------------------------------
-objref synIDFile
-strdef synIDFilename
-sprint (synIDFilename, "%s%s%s", outPath, IDstring,"synIDs.txt")
-synIDFile = new File(synIDFilename)
-synIDFile.wopen()
-for i=0,synPosIDvec.size()-1 {
-    synIDFile.printf("%d\t%d\t%d\n",synIDvec.x[i], synPreIDvec.x[i], synPosIDvec.x[i]) 
+objref synIDfile
+strdef synIDfilename
+sprint (synIDfilename, "%s%s%s", outPath, IDstring,"synIDs.txt")
+synIDfile = new File(synIDfilename)
+synIDfile.wopen()
+for i=0,synIDvec.size()-1 {
+    synIDfile.printf("%d\t%d\t%d\n",synIDvec.x[i], synPreIDvec.x[i], synPosIDvec.x[i]) 
   }
-synIDFile.close()
+synIDfile.close()
+
+{printf("(synIDvec.size()) = %d\n", (synIDvec.size()))}
+{printf("(Ginh.count()) = %d\n", (Ginh.count()))}
+{printf("(GXinh.count()) = %d\n", (GXinh.count()))}
+{printf("(Cinh.count()) = %d\n", (Cinh.count()))}
+{printf("(CXinh.count()) = %d\n", (CXinh.count()))}
+{printf("(tgvec.size()) = %d\n", (tgvec.size()))}
+{printf("(Ginh.o(0).size()) = %d\n", (Ginh.o(0).size()))}
+{printf("(Cinh.o(0).size()) = %d\n", (Cinh.o(0).size()))}
+{printf("(GXinh.o(0).size()) = %d\n", (GXinh.o(0).size()))}
+{printf("(CXinh.o(0).size()) = %d\n", (CXinh.o(0).size()))}
+///////////////// Write Conductance as well as Current vs time ////////////////////////////////
+//Synaptic as well as xtra synaptic
+///////////////// Added this on 9thSept2018 from NB //////////////////////////////////////////
+///////////////// modified this on 10thSept2018 from lab /////////////////////////////////////
+//Ginh = new List() Cinh = new List() GXinh = new List() CXinh = new List()
+//////////////////////////////////////////////////////////////////////////////////////////////
+objref Gfile, Cfile
+strdef gfileName
+strdef cfileName
+sprint(gfileName, "%s%s%s", outPath, IDstring,  "GvsTime.txt")
+sprint(cfileName, "%s%s%s", outPath, IDstring,  "CvsTime.txt")
+Gfile= new File(gfileName)
+Cfile= new File(cfileName)
+{printf(gfileName)}
+{printf(cfileName)}
+Gfile.wopen()
+Cfile.wopen()
+Gfile.printf("-1 ") // First index is for time.
+Cfile.printf("-1 ") // First index is for time.
+for s = 0, (synIDvec.size()-1) {
+  Gfile.printf("%g ", synIDvec.x(s)) 
+  Cfile.printf("%g ", synIDvec.x(s)) 
+  }
+for j = 0, Ginh.o(0).size() -1 {
+  Gfile.printf("\n")
+	Gfile.printf("%g ", tgvec.x(j))
+  Cfile.printf("\n")
+	Cfile.printf("%g ", tgvec.x(j))
+	for k = 0, (synIDvec.size()-1){
+			  Gfile.printf("%g ", Ginh.o(k).x(j))
+        Cfile.printf("%g ", Cinh.o(k).x(j))                           
+		    }
+	}
+Gfile.close()
+Cfile.close()
+/////////////////////////////////////////////////////////
+
+objref GXfile, CXfile
+strdef gxfileName
+strdef cxfileName
+sprint(gxfileName, "%s%s%s", outPath, IDstring,  "GXvsTime.txt")
+sprint(cxfileName, "%s%s%s", outPath, IDstring,  "CXvsTime.txt")
+GXfile= new File(gxfileName)
+CXfile= new File(cxfileName)
+{printf(gxfileName)}
+{printf(cxfileName)}
+GXfile.wopen()
+CXfile.wopen()
+GXfile.printf("-1 ") // First index is for time.
+CXfile.printf("-1 ") // First index is for time.
+for s = 0, (synIDvec.size()-1) {
+  GXfile.printf("%g ", synIDvec.x(s)) 
+  CXfile.printf("%g ", synIDvec.x(s)) 
+  }
+for j = 0, GXinh.o(0).size() -1 {
+  GXfile.printf("\n")
+	GXfile.printf("%g ", tgvec.x(j))
+  CXfile.printf("\n")
+	CXfile.printf("%g ", tgvec.x(j))
+	for k = 0, (synIDvec.size()-1) {
+			  GXfile.printf("%g ", GXinh.o(k).x(j))
+        CXfile.printf("%g ", CXinh.o(k).x(j))                           
+	      }
+	}
+GXfile.close()
+CXfile.close()
+/////////////////////////////////////////////////////////
+

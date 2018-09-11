@@ -13,7 +13,7 @@ seed = 5
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
 //lambda = 10    //changed on 10thJuly2018
 myFactor = param
-tstop = 300
+tstop = 3000
 {printf("--------------------------------------------------")}
 {printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
 {printf("---------------------- tstop = %d ---------------!\n", tstop)}

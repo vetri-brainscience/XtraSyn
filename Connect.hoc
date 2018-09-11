@@ -78,7 +78,7 @@ lsyn.Erev_gabab = par.x(16)
 //Added by vetri  
 lsyn.tau1_xtra = 2.0   //ms     
 lsyn.tau2_xtra = 10.0  //ms
-lsyn.e_xtra = -74     //mV
+lsyn.e_xtra = -75     //mV
 lsyn.gbar_gabaa_xtra = myFactor*(lsyn.gbar_gabaa)
 
 if (preArea == CA3b && postArea == CA3e) {
