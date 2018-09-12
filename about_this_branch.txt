@@ -4,6 +4,9 @@ This branch was created off the single run version
 of the conductance branch (all working on 11thSpet2018).
 *********************************************************
 
+  This branch is:....  arrayJobversion ......
+
+*********************************************************
 
 In this branch one of the variables (param) can be assigned from
 slurm array index. 
