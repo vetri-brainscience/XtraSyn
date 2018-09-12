@@ -1,0 +1,60 @@
+*********************************************************
+This branch was created on the 12th of Sept, 2018.
+This branch was created off the single run version 
+of the conductance branch (all working on 11thSpet2018).
+*********************************************************
+
+
+In this branch one of the variables (param) can be assigned from
+slurm array index. 
+
+
+
+
+for example, the param (array index) could be set to change the gbar_xtraSyn
+
+//---------- when Hipp.hoc is run directly---------------
+jobid = 333
+strdef codestr
+codestr = "hello"
+lambda = 10
+param = 1    //MyFactor = param
+seed = 5
+//------------------------------------------------------
+// Setting the parameters to run the simulations from function abc() in MyHip.hoc
+//lambda = 10    //changed on 10thJuly2018
+myFactor = param
+tstop = 3000
+{printf("--------------------------------------------------")}
+{printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
+{printf("---------------------- tstop = %d ---------------!\n", tstop)}
+{printf("---------------------- JobID = %d ---------------!\n", jobid)}
+{printf("--------------------------------------------------")}
+
+
+Also a few lines below in the Hipp.hoc
+strdef outPath // Specify the folder for the simulation output files
+outPath="./Outputs/"
+---------------------------------------------------------------
+Also a few lines down in Hipp.hoc:
+---------------------------------------------------------------
+{printf("---------------------- Seed = %d ---------------!\n", seed)}
+//{printf("from Hipp.hoc : ------seed is = %d ---------param (lambda) = %d (Hz)
+\nsm = %g (ms)\tcodestr = %s\n", seed, lambda, (1/lambda)*1000, codestr)}
+//seed is comming from the MyHipp.hoc!!
+//codestr is also coming from the MyHipp.hoc !!
+//codestr is a string added to the output filenames!!
+--------------------------------------------------------------
+
+and towards the end of Hipp.hoc file:
+-------------------------------------------------------------
+/////////////// IMPORT PARAMETERS FOR FILING
+//codstr(string) and the seed (value) is also coming from the MyHipp.hoc !!
+//codestr is a string added to the output filenames!!
+strdef IDstring, jobIDstring
+sprint(jobIDstring, "%s_%d", codestr, jobid)
+sprint(IDstring, "%g%g%g%s_%g_%s_", Mods2, Experiment, seed, expSig, param, jobIDstring)
+strdef IDstrWeights
+sprint(IDstrWeights, "%g%g%g", 2, 0, seed)
+-------------------------------------------------------------
+
