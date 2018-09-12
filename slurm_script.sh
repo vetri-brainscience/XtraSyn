@@ -7,10 +7,9 @@
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --partition=all
 #SBATCH --time=1:00:00               # Time limit hrs:min:sec
-#SBATCH --output=./Report/serial_test_%j.out   # Standard output and error log
-#SBATCH --error=./Report/serial_test_%j.err
+#SBATCH --output=./Report/serial_job_%j.out   # Standard output and error log
+#SBATCH --error=./Report/serial_job_%j.err
 pwd; hostname; date
-
 
 echo "script on a single CPU core"
 COUNTER=11

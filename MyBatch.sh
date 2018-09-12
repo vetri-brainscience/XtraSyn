@@ -1,10 +1,10 @@
 #!/bin/bash
-
-counter=$1
+#param is array task id
+seed=$1
 param=$2
 jobid=$3
 ./x86_64/special -nobanner MyHipp.hoc - << here
-  abc($counter, $param, $jobid)
+  abc($seed, $param, $jobid)
 here
   
 echo Ok  

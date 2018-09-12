@@ -125,13 +125,14 @@ j=-1
 {printf("--------------------------------\n")}
 {printf("j..start = %d\n", j+1)}
 for s = 0, Syn.count() -1 {
-		if ((Connections.x(s,5) == Inhibitory) && (Connections.x(s, 1) == CA3b) && (Connections.x(s, 3) == CA3e)&& ((Connections.x(s, 4) == 2) || (Connections.x(s, 4) == 10))) {
+		if ((Connections.x(s,5) == Inhibitory) && (Connections.x(s, 1) == CA3b) && (Connections.x(s, 3) == CA3e)&& \
+    ((Connections.x(s, 4) == 2) || (Connections.x(s, 4) == 10))) {
 						j=j+1
             //{printf("b = %d\t m = %d\t%d\n", Connections.x(s, 2), Connections.x(s, 4), Connections.x(s, 0))}
             synPreIDvec.append(Connections.x(s, 2))
             synPosIDvec.append(Connections.x(s, 4))
             synIDvec.append(Connections.x(s, 0))  
-            {printf("b* = %d\t m* = %d\t%d\n", synPreIDvec.x[j], synPosIDvec.x[j], synIDvec.x[j])}
+            {printf("b = %d\tm = %d\t%d\n", synPreIDvec.x[j], synPosIDvec.x[j], synIDvec.x[j])}
 			} else {
 				  j=j
 			}

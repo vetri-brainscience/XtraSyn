@@ -8,13 +8,13 @@
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --partition=gpu
 #SBATCH --time=1:00:00               # Time limit hrs:min:sec
-#SBATCH --array=0-10
+#SBATCH --array=1-100:10
 
 pwd; hostname; date
 
 
 # Print this sub-job's task ID
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
-
-./MyBatch.sh $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_JOB_ID
+SEED=8
+./MyBatch.sh $SEED $SLURM_ARRAY_TASK_ID $SLURM_ARRAY_JOB_ID
 date

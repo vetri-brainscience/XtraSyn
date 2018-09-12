@@ -2,24 +2,33 @@ load_file("Template.hoc")
 //load_file("nrngui.hoc")
 load_file("stdrun.hoc")
 load_file("ReadExperiments.hoc")
-//---------- when Hipp.hoc is run directly---------------
-jobid = 333
-strdef codestr
-codestr = "hello"
-lambda = 10
-param = 1    //MyFactor = param
-seed = 5
-//------------------------------------------------------
-// Setting the parameters to run the simulations from function abc() in MyHip.hoc
-//lambda = 10    //changed on 10thJuly2018
+
+// In this version, the following parameters to run the simulations from function abc() in MyHip.hoc
+//seed = 5
+//param = 1    //MyFactor = param
+//jobid = 333
+
 myFactor = param
-tstop = 3000
+//---------------------------
+lambda = 10  
+tstop = 300
+//strdef codestr
+//codestr = "hello"    
+//---------------------------
+
+//------------------------------------------------------
+//lambda in Hz
+// stimuls.interval (ms) = (1/lambda)*1000
+//------------------------------------------------------
+{printf("\n--------------------------------------------------\n")}
 {printf("\n****  This is  arrayJobversion of conductance branch! ****\n")}
-{printf("--------------------------------------------------")}
-{printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
-{printf("---------------------- tstop = %d ---------------!\n", tstop)}
-{printf("---------------------- JobID = %d ---------------!\n", jobid)}
-{printf("--------------------------------------------------")}
+{printf("----------- Seed = %d ---------------!\n", seed)}
+{printf("----------- lambda(Hz) = %d ----------!\n", lambda)}
+{printf("----------- tstop = %d ---------------!\n", tstop)}
+{printf("----------- myFactor = %0.4f ---------------!\n", myFactor)}
+{printf("----------- JobID = %d ---------------!\n", jobid)}
+{printf("----------- codestr = %s ---------------!\n", codestr)}
+{printf("--------------------------------------------------\n")}
 
 strdef outPath // Specify the folder for the simulation output files
 outPath="./Outputs/"
@@ -43,7 +52,7 @@ expSig = "full"
 //seed = fscan()
 
 
-{printf("---------------------- Seed = %d ---------------!\n", seed)}
+
 //{printf("from Hipp.hoc : ------seed is = %d ---------param (lambda) = %d (Hz)\nsm = %g (ms)\tcodestr = %s\n", seed, lambda, (1/lambda)*1000, codestr)}
 //seed is comming from the MyHipp.hoc!!
 //codestr is also coming from the MyHipp.hoc !!
@@ -141,20 +150,22 @@ SynIDvec = GetSynapses (CA3b, CA3e)
 {printf("SynIDvec.x[%d] = %d\n", SynIDvec.size()-1, SynIDvec.x[SynIDvec.size()-1])}
 SynID0=SynIDvec.x[0]
 
+
+//:SynID0=SynIDvec.x[0]
 {printf("SynID0 = %d\n", SynID0)} 
 {printf("Size of Syn list = %d\n", Syn.count())}
 {printf("Dimensions of Connections Matrix(nrow X ncol) = %d\t%d\n", Connections.nrow, Connections.ncol)}
 xxx = Syn.o(SynID0).AlphaTmax_gabaa
-{printf("syn.AlphaTmax_gabaa = %g (uS)\n", xxx)}
-yyy = Syn.o(SynID0).tau1_xtra
-{printf("syn.tau1_xtra= %g ()\n", yyy)}
-zzz = Syn.o(SynID0).tau2_xtra
-{printf("syn.tau2_xtra= %g ()\n", zzz)}
+//{printf("syn.AlphaTmax_gabaa = %g (uS)\n", xxx)}
 gggS = Syn.o(SynID0).gbar_gabaa
+tau1X = Syn.o(SynID0).tau1_xtra
+tau2X = Syn.o(SynID0).tau2_xtra
 gggX = Syn.o(SynID0).gbar_gabaa_xtra
-{printf("remember gbar_gabaa_xtra = myFactor*(lsyn.gbar_gabaa)\n")}
+{printf("\n***************************************************\n")}
+{printf("Data for SynID0 - :SynID0=SynIDvec.x[0]\n")}
 {printf("syn.gbar_gabaa= %g (uS)\n", gggS)}
-{printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
+{printf("syn.tau1_xtra= %g (ms)\n", tau1X)}
+{printf("syn.tau2_xtra= %g (ms)\n", tau2X)}
 {printf("syn.gbar_gabaa_xtra= %g (uS)\n", gggX)}
 {printf("***************************************************\n")}
  
@@ -203,6 +214,29 @@ sprint(IDstring, "%g%g%g%s_%g_%s_", Mods2, Experiment, seed, expSig, param, jobI
 strdef IDstrWeights
 sprint(IDstrWeights, "%g%g%g", 2, 0, seed)
 {printf("\n****  This is  arrayJobversion of conductance branch! ****\n")}
+//------------------------------------------------------
+{printf("\n--------------------------------------------------\n")}
+{printf("\n****  This is  arrayJobversion of conductance branch! ****\n")}
+{printf("----------- Seed = %d ---------------!\n", seed)}
+{printf("----------- lambda(Hz) = %d ----------!\n", lambda)}
+{printf("----------- tstop = %d ---------------!\n", tstop)}
+{printf("----------- myFactor = %0.4f ---------------!\n", myFactor)}
+{printf("----------- JobID = %d ---------------!\n", jobid)}
+{printf("----------- codestr = %s ---------------!\n", codestr)}
+{printf("--------------------------------------------------\n")}
+{printf("***************************************************\n")}
+{printf("Data for SynID0 - :SynID0=SynIDvec.x[0]\n")}
+{printf("syn.gbar_gabaa= %g (uS)\n", gggS)}
+{printf("syn.tau1_xtra= %g (ms)\n", tau1X)}
+{printf("syn.tau2_xtra= %g (ms)\n", tau2X)}
+{printf("syn.gbar_gabaa_xtra= %g (uS)\n", gggX)}
+{printf("***************************************************\n")}
+{printf("synIDvec.size() = %d\n", synIDvec.size())}
+{printf("synPreID\tsynPosID\tsynID\n")}
+for i=0, (synIDvec.size()-1) {
+    {printf("b = %d\tm = %d\t%d\n", synPreIDvec.x[i], synPosIDvec.x[i], synIDvec.x[i])}
+}
+{printf("***************************************************\n")}
 printf("******* Starting run() ****************\n")
 run()
 load_file("WriteOutput.hoc") // Writes the recorded outputs from the simulation into text files
@@ -214,4 +248,27 @@ strdef foo
 //print foo
 //print foo
 //print foo
+//------------------------------------------------------
+{printf("\n--------------------------------------------------\n")}
 {printf("\n****  This is  arrayJobversion of conductance branch! ****\n")}
+{printf("----------- Seed = %d ---------------!\n", seed)}
+{printf("----------- lambda(Hz) = %d ----------!\n", lambda)}
+{printf("----------- tstop = %d ---------------!\n", tstop)}
+{printf("----------- myFactor = %0.4f ---------------!\n", myFactor)}
+{printf("----------- JobID = %d ---------------!\n", jobid)}
+{printf("----------- codestr = %s ---------------!\n", codestr)}
+{printf("--------------------------------------------------\n")}
+{printf("***************************************************\n")}
+{printf("Data for SynID0 - :SynID0=SynIDvec.x[0]\n")}
+{printf("syn.gbar_gabaa= %g (uS)\n", gggS)}
+{printf("syn.tau1_xtra= %g (ms)\n", tau1X)}
+{printf("syn.tau2_xtra= %g (ms)\n", tau2X)}
+{printf("syn.gbar_gabaa_xtra= %g (uS)\n", gggX)}
+{printf("***************************************************\n")}
+{printf("\n")}
+{printf("synIDvec.size() = %d\n", synIDvec.size())}
+{printf("synPreID\tsynPosID\tsynID\n")}
+for i=0, (synIDvec.size()-1) {
+    {printf("b = %d\tm = %d\t%d\n", synPreIDvec.x[i], synPosIDvec.x[i], synIDvec.x[i])}
+}
+{printf("************  done! *****************\n")}
