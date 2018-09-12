@@ -14,6 +14,7 @@ seed = 5
 //lambda = 10    //changed on 10thJuly2018
 myFactor = param
 tstop = 3000
+{printf("\n****  This is  arrayJobversion of conductance branch! ****\n")}
 {printf("--------------------------------------------------")}
 {printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
 {printf("---------------------- tstop = %d ---------------!\n", tstop)}
@@ -201,7 +202,7 @@ sprint(jobIDstring, "%s_%d", codestr, jobid)
 sprint(IDstring, "%g%g%g%s_%g_%s_", Mods2, Experiment, seed, expSig, param, jobIDstring)
 strdef IDstrWeights
 sprint(IDstrWeights, "%g%g%g", 2, 0, seed)
-
+{printf("\n****  This is  arrayJobversion of conductance branch! ****\n")}
 printf("******* Starting run() ****************\n")
 run()
 load_file("WriteOutput.hoc") // Writes the recorded outputs from the simulation into text files
@@ -213,3 +214,4 @@ strdef foo
 //print foo
 //print foo
 //print foo
+{printf("\n****  This is  arrayJobversion of conductance branch! ****\n")}
