@@ -13,7 +13,7 @@ seed = 5
 // Setting the parameters to run the simulations from function abc() in MyHip.hoc
 //lambda = 10    //changed on 10thJuly2018
 myFactor = param
-tstop = 3000
+tstop = 300
 {printf("--------------------------------------------------")}
 {printf("---------------------- myFactor = %0.4f ---------------!\n", myFactor)}
 {printf("---------------------- tstop = %d ---------------!\n", tstop)}
@@ -41,7 +41,7 @@ expSig = "full"
 //ropen("seed.txt")
 //seed = fscan()
 
-
+{print("****  This is  singleJobversion of conductance branch! ****")}
 {printf("---------------------- Seed = %d ---------------!\n", seed)}
 //{printf("from Hipp.hoc : ------seed is = %d ---------param (lambda) = %d (Hz)\nsm = %g (ms)\tcodestr = %s\n", seed, lambda, (1/lambda)*1000, codestr)}
 //seed is comming from the MyHipp.hoc!!
@@ -201,7 +201,7 @@ sprint(jobIDstring, "%s_%d", codestr, jobid)
 sprint(IDstring, "%g%g%g%s_%g_%s_", Mods2, Experiment, seed, expSig, param, jobIDstring)
 strdef IDstrWeights
 sprint(IDstrWeights, "%g%g%g", 2, 0, seed)
-
+{print("****  This is  singleJobversion of conductance branch! ****")}
 printf("******* Starting run() ****************\n")
 run()
 load_file("WriteOutput.hoc") // Writes the recorded outputs from the simulation into text files
@@ -213,3 +213,4 @@ strdef foo
 //print foo
 //print foo
 //print foo
+{print("****  This is  singleJobversion of conductance branch! ****")}
